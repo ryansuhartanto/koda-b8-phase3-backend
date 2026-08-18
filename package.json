@@ -5,7 +5,7 @@
 	"repository": "ryansuhartanto/koda-b8-phase3-backend",
 	"type": "module",
 	"imports": {
-		"#/*": "./src/*.js"
+		"#/*": "./src/*"
 	},
 	"scripts": {
 		"build": "vp pack",
