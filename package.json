@@ -1,5 +1,6 @@
 {
 	"name": "koda-b8-phase3-backend",
+	"license": "MIT",
 	"author": "Ryan Suhartanto <suhartanto@kekkon.nexus>",
 	"repository": "ryansuhartanto/koda-b8-phase3-backend",
 	"type": "module",
