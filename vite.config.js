@@ -36,4 +36,8 @@ export default defineConfig({
 	staged: {
 		"*": "vp check --fix --no-error-on-unmatched-pattern",
 	},
+
+	pack: {
+		entry: "src/index.js",
+	},
 });

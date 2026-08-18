@@ -5,12 +5,11 @@
 	"repository": "ryansuhartanto/koda-b8-phase3-backend",
 	"type": "module",
 	"imports": {
-		"#/*": [
-			"./src/*/index.js",
-			"./src/*.js"
-		]
+		"#/*": "./src/*.js"
 	},
 	"scripts": {
+		"build": "vp pack",
+		"dev": "vp pack --watch --on-success 'node dist/index.mjs'",
 		"fmt": "vp fmt",
 		"lint": "vp lint",
 		"prepare": "vp config"
