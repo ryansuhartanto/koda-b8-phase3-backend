@@ -5,6 +5,9 @@
 		"allowJs": true,
 		"checkJs": true,
 
+		"experimentalDecorators": true,
+		"strictPropertyInitialization": false,
+
 		"noEmit": true,
 		"types": ["node", "express"],
 		"skipLibCheck": true

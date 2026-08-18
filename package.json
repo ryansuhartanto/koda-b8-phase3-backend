@@ -8,6 +8,7 @@
 		"#/*": "./src/*"
 	},
 	"scripts": {
+		"db": "sqlumz",
 		"build": "vp pack",
 		"dev": "vp pack --watch --on-success 'node dist/index.mjs'",
 		"fmt": "vp fmt",
@@ -15,6 +16,8 @@
 		"prepare": "vp config"
 	},
 	"dependencies": {
+		"@sequelize/core": "7.0.0-alpha.48",
+		"@sequelize/postgres": "7.0.0-alpha.48",
 		"express": "^5.2.1"
 	},
 	"devDependencies": {
@@ -26,6 +29,7 @@
 		"oxfmt": ">=0.63.0 <1",
 		"oxlint": "^1.78.0",
 		"oxlint-tsgolint": "^7.0.2001",
+		"sqlumz": "^0.3.0",
 		"typescript": "^7.0.2",
 		"vite-plus": "^0.2.9"
 	},
