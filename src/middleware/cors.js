@@ -1,4 +1,7 @@
-/** @type {import("express").RequestHandler} */
+/**
+ * @type {import("express").RequestHandler}
+ * @returns {any}
+ */
 const cors = (req, res, next) => {
 	const headers = {
 		// TODO: limit origin
