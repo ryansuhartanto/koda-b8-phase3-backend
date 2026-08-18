@@ -15,9 +15,13 @@
 		"lint": "vp lint",
 		"prepare": "vp config"
 	},
+	"dependencies": {
+		"express": "^5.2.1"
+	},
 	"devDependencies": {
 		"@commitlint/cli": "^21.2.2",
 		"@kekkon-nexus/config": "^2.260818.0",
+		"@types/express": "^5.0.6",
 		"@types/node": "^26.1.2",
 		"eslint-plugin-no-relative-import-paths": "^1.6.1",
 		"oxfmt": ">=0.63.0 <1",

@@ -6,7 +6,7 @@
 		"checkJs": true,
 
 		"noEmit": true,
-		"types": ["@types/node"],
+		"types": ["@types/node", "@types/express"],
 		"skipLibCheck": true
 	},
 	"exclude": ["./dist"]
