@@ -3,7 +3,7 @@
 	"editor.tabSize": 2,
 
 	"oxc.enable": true,
-	"oxc.fmt.configPath": "./vite.config.ts",
+	"oxc.fmt.configPath": "./vite.config.js",
 
 	"editor.codeActionsOnSave": {
 		"source.fixAll.oxc": "explicit"
