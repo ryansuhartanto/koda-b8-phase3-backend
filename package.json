@@ -4,6 +4,12 @@
 	"author": "Ryan Suhartanto <suhartanto@kekkon.nexus>",
 	"repository": "ryansuhartanto/koda-b8-phase3-backend",
 	"type": "module",
+	"imports": {
+		"#/*": [
+			"./src/*/index.js",
+			"./src/*.js"
+		]
+	},
 	"scripts": {
 		"fmt": "vp fmt",
 		"lint": "vp lint",
@@ -13,6 +19,7 @@
 		"@commitlint/cli": "^21.2.2",
 		"@kekkon-nexus/config": "^2.260818.0",
 		"@types/node": "^26.1.2",
+		"eslint-plugin-no-relative-import-paths": "^1.6.1",
 		"oxfmt": ">=0.63.0 <1",
 		"oxlint": "^1.78.0",
 		"oxlint-tsgolint": "^7.0.2001",
