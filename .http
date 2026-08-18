@@ -1,0 +1,18 @@
+GET /
+Host: localhost:4001
+
+###
+
+POST /auth/register
+Host: localhost:4001
+Content-Type: application/x-www-form-urlencoded
+
+email=test@email.com&password=123
+
+###
+
+POST /auth/login
+Host: localhost:4001
+Content-Type: application/x-www-form-urlencoded
+
+email=test@email.com&password=123

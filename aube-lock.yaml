@@ -18,6 +18,9 @@ importers:
       '@sequelize/postgres':
         specifier: 7.0.0-alpha.48
         version: 7.0.0-alpha.48
+      bcryptjs:
+        specifier: ^3.0.3
+        version: 3.0.3
       express:
         specifier: ^5.2.1
         version: 5.2.1
@@ -1180,6 +1183,10 @@ packages:
   assertion-error@2.0.1:
     resolution: {integrity: sha512-Izi8RQcffqCeNVgFigKli1ssklIbpHnCYc6AknXGYoB6grJqyeby7jv12JUQgmTAnIDnbck1uxksT4dzN3PWBA==}
     engines: {node: '>=12'}
+
+  bcryptjs@3.0.3:
+    resolution: {integrity: sha512-GlF5wPWnSa/X5LKM1o0wz0suXIINz1iHRLvTS+sLyi7XPbe5ycmYI3DlZqVGZZtDgl4DmasFg7gOB3JYbphV5g==}
+    hasBin: true
 
   bnf-parser@3.1.6:
     resolution: {integrity: sha512-3x0ECh6CghmcAYnY6uiVAOfl263XkWffDq5fQS20ac3k0U7TE5rTWNXTnOTckgmfZc94iharwqCyoV8OAYxYoA==}
@@ -3112,6 +3119,8 @@ snapshots:
       dequal: 2.0.3
 
   assertion-error@2.0.1: {}
+
+  bcryptjs@3.0.3: {}
 
   bnf-parser@3.1.6: {}
 
