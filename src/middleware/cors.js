@@ -1,4 +1,3 @@
-// oxlint-disable typescript/no-unsafe-assignment typescript/no-unsafe-argument typescript/no-unsafe-call
 /**
  * @typedef RouterLayer
  * @property {(path: string) => boolean} match
@@ -29,7 +28,6 @@ const collectMethods = (stack, path) =>
 			? collectMethods(nested, path.slice(prefix.length) || "/")
 			: [];
 	});
-// oxlint-enable typescript/no-unsafe-assignment typescript/no-unsafe-argument typescript/no-unsafe-call
 
 /**
  * @type {import("express").RequestHandler}

@@ -95,12 +95,11 @@ export class Url extends Model {
 
 	/**
 	 * @param {string} code
-	 * @returns {bigint?}
+	 * @returns {string?}
 	 */
 	static decodeId(code) {
 		// Crockford: hyphens are decoration, O reads as 0, I and L read as 1
 		const normalized = code
-			.replaceAll("-", "")
 			.toUpperCase()
 			.replaceAll("O", "0")
 			.replaceAll(/[IL]/g, "1");
@@ -121,7 +120,7 @@ export class Url extends Model {
 			value = (value << 5n) | BigInt(index);
 		}
 
-		return decipher(value);
+		return String(decipher(value));
 	}
 }
 

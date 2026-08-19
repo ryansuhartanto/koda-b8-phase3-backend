@@ -14,7 +14,7 @@ async function ownedId(code, userId) {
 	}
 
 	const owner = await UrlOwner.findOne({
-		where: { urlId: String(id), userId },
+		where: { urlId: id, userId },
 	});
 
 	return owner && id;
@@ -82,7 +82,7 @@ export async function remove(code, userId) {
 		return false;
 	}
 
-	await Url.destroy({ where: { id: String(id) } });
+	await Url.destroy({ where: { id } });
 
 	return true;
 }
