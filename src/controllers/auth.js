@@ -6,23 +6,24 @@ import * as Service from "#/services/auth.js";
  * @openapi
  * tags:
  *   - name: auth
- *     description: Registration and login
  * components:
  *   schemas:
  *     Credentials:
  *       type: object
  *       required: [email, password]
  *       properties:
- *         email: { type: string, format: email }
- *         password: { type: string }
+ *         email: { type: string, format: email, example: user@example.com }
+ *         password: { type: string, example: correct-horse-battery-staple }
  *     Auth:
  *       type: object
  *       properties:
  *         user:
  *           type: object
  *           properties:
- *             email: { type: string, format: email }
- *         token: { type: string }
+ *             email: { type: string, format: email, example: user@example.com }
+ *         token:
+ *           type: string
+ *           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJzdWIiOiIxIn0.dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk
  */
 
 /**

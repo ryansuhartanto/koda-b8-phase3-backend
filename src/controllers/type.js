@@ -32,12 +32,12 @@ export {};
  *     FieldErrors:
  *       type: object
  *       properties:
- *         email: { type: string }
- *         password: { type: string }
- *         url: { type: string }
+ *         email: { type: string, example: Missing email field }
+ *         password: { type: string, example: Missing password field }
+ *         url: { type: string, example: Invalid url }
  *   responses:
  *     Invalid:
- *       description: Missing or invalid fields
+ *       description: Invalid fields
  *       content:
  *         application/json:
  *           schema:

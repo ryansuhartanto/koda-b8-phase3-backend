@@ -10,7 +10,7 @@ const router = Router();
  * /auth/login:
  *   post:
  *     tags: [auth]
- *     summary: Authenticate and receive a JWT
+ *     summary: Authenticate
  *     requestBody:
  *       required: true
  *       content:
@@ -41,7 +41,7 @@ router.post("/login", Controller.login);
  * /auth/register:
  *   post:
  *     tags: [auth]
- *     summary: Register an account and receive a JWT
+ *     summary: Register
  *     requestBody:
  *       required: true
  *       content:

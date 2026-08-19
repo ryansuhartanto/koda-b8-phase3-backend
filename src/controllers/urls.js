@@ -6,19 +6,18 @@ import * as Service from "#/services/urls.js";
  * @openapi
  * tags:
  *   - name: urls
- *     description: Short link management
  * components:
  *   schemas:
  *     Url:
  *       type: object
  *       properties:
- *         url: { type: string, format: uri }
- *         encoded: { type: string }
- *         createdAt: { type: string, format: date-time }
- *         updatedAt: { type: string, format: date-time }
+ *         url: { type: string, format: uri, example: "https://example.com/a/very/long/link" }
+ *         encoded: { type: string, example: 8CVZNSW0V6 }
+ *         createdAt: { type: string, format: date-time, example: "2026-08-19T09:30:00.000Z" }
+ *         updatedAt: { type: string, format: date-time, example: "2026-08-19T09:35:12.000Z" }
  *   responses:
  *     NotFound:
- *       description: Short link is not found
+ *       description: Short link not found
  *       content:
  *         application/json:
  *           schema: { $ref: "#/components/schemas/Result" }

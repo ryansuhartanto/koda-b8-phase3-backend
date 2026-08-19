@@ -11,13 +11,13 @@ const router = Router();
  * /urls/{code}:
  *   get:
  *     tags: [urls]
- *     summary: Resolve a short code to its target url
+ *     summary: Resolve a short code
  *     security: []
  *     parameters:
  *       - name: code
  *         in: path
  *         required: true
- *         schema: { type: string }
+ *         schema: { type: string, example: 8CVZNSW0V6 }
  *     responses:
  *       200:
  *         description: Resolved
@@ -41,7 +41,7 @@ router.use(auth);
  * /urls:
  *   get:
  *     tags: [urls]
- *     summary: List the short links owned by the caller
+ *     summary: List owned short links
  *     responses:
  *       200:
  *         description: Listed
@@ -68,7 +68,7 @@ router.use(auth);
  *             type: object
  *             required: [url]
  *             properties:
- *               url: { type: string, format: uri }
+ *               url: { type: string, format: uri, example: "https://example.com/a/very/long/link" }
  *     responses:
  *       201:
  *         description: Shortened
@@ -93,12 +93,12 @@ router.post("/", Controller.shorten);
  * /urls/{code}:
  *   patch:
  *     tags: [urls]
- *     summary: Repoint an owned short link
+ *     summary: Repoint a short link
  *     parameters:
  *       - name: code
  *         in: path
  *         required: true
- *         schema: { type: string }
+ *         schema: { type: string, example: 8CVZNSW0V6 }
  *     requestBody:
  *       required: true
  *       content:
@@ -107,7 +107,7 @@ router.post("/", Controller.shorten);
  *             type: object
  *             required: [url]
  *             properties:
- *               url: { type: string, format: uri }
+ *               url: { type: string, format: uri, example: "https://example.com/a/very/long/link" }
  *     responses:
  *       200:
  *         description: Updated
@@ -127,12 +127,12 @@ router.post("/", Controller.shorten);
  *         $ref: "#/components/responses/Invalid"
  *   delete:
  *     tags: [urls]
- *     summary: Delete an owned short link
+ *     summary: Delete a short link
  *     parameters:
  *       - name: code
  *         in: path
  *         required: true
- *         schema: { type: string }
+ *         schema: { type: string, example: 8CVZNSW0V6 }
  *     responses:
  *       200:
  *         description: Removed

@@ -58,7 +58,7 @@ export default auth;
  *       bearerFormat: JWT
  *   responses:
  *     Unauthorized:
- *       description: Missing, malformed or expired token
+ *       description: Invalid token
  *       content:
  *         application/json:
  *           schema: { $ref: "#/components/schemas/Result" }
