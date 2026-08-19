@@ -1,23 +1,43 @@
+import { hkdfSync } from "node:crypto";
+
 import { DataTypes, Model } from "@sequelize/core";
+import siphash13 from "siphash/lib/siphash13";
 
 import sequelize from "#/models/index.js";
 
-// Feistel chipher over a Crockford's base32
+// 50-bit Feistel PRP (SipHash-1-3 PRF) -> 10-char Crockford's Base32
 // oxlint-disable no-bitwise unicorn/number-literal-case
 const ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 const CODE_LENGTH = 10;
 const HALF_BITS = 25n;
 const HALF_MASK = 0x1ffffff;
-const ROUND_KEYS = [0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a];
+const ROUNDS = 8;
+
+const MASTER = Buffer.from(
+	/** @type {string} */ (process.env["LINK_KEY"]),
+	"hex",
+);
+const KEY_MATERIAL = Buffer.from(
+	hkdfSync("sha256", MASTER, "", "link-feistel", ROUNDS * 16),
+);
+const ROUND_KEYS = Array.from({ length: ROUNDS }, (_, i) => {
+	const k = KEY_MATERIAL.subarray(i * 16, (i + 1) * 16);
+	return Uint32Array.of(
+		k.readUInt32LE(0),
+		k.readUInt32LE(4),
+		k.readUInt32LE(8),
+		k.readUInt32LE(12),
+	);
+});
+const SCRATCH = Buffer.allocUnsafe(4);
 
 /**
  * @param {number} value
- * @param {number} key
+ * @param {Uint32Array} key
  */
 function round(value, key) {
-	let x = Math.imul(value ^ key, 0x2545f491) >>> 0;
-	x = Math.imul(x ^ (x >>> 15), 0x9e3779b1) >>> 0;
-	return (x ^ (x >>> 13)) & HALF_MASK;
+	SCRATCH.writeUInt32BE(value);
+	return siphash13.hash(key, SCRATCH).l & HALF_MASK;
 }
 
 /**
@@ -100,6 +120,7 @@ export class Url extends Model {
 	static decodeId(code) {
 		// Crockford: hyphens are decoration, O reads as 0, I and L read as 1
 		const normalized = code
+			.replaceAll("-", "")
 			.toUpperCase()
 			.replaceAll("O", "0")
 			.replaceAll(/[IL]/g, "1");
