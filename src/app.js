@@ -1,3 +1,4 @@
+import { apiReference } from "@scalar/express-api-reference";
 import express from "express";
 
 import openapi from "#/docs/openapi.json" with { type: "json" };
@@ -19,6 +20,16 @@ app.get("/openapi.json", (req, res) => {
 		servers: [{ url: `${req.protocol}://${req.get("host")}` }],
 	});
 });
+
+app.get("/", (_req, res) => {
+	res.redirect(301, "/docs");
+});
+app.use(
+	"/docs",
+	apiReference({
+		url: "/openapi.json",
+	}),
+);
 
 app.use("/auth", auth);
 app.use("/urls", urls);
