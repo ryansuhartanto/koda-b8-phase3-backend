@@ -31,7 +31,7 @@ const router = Router();
  *       404:
  *         $ref: "#/components/responses/NotFound"
  */
-router.get("/:code", Controller.resolve);
+router.get("/*code", Controller.resolve);
 
 router.use(auth);
 
@@ -81,6 +81,8 @@ router.use(auth);
  *                     result: { $ref: "#/components/schemas/Url" }
  *       401:
  *         $ref: "#/components/responses/Unauthorized"
+ *       409:
+ *         $ref: "#/components/responses/Taken"
  *       422:
  *         $ref: "#/components/responses/Invalid"
  */
@@ -121,6 +123,8 @@ router.post("/", Controller.shorten);
  *         $ref: "#/components/responses/Unauthorized"
  *       404:
  *         $ref: "#/components/responses/NotFound"
+ *       409:
+ *         $ref: "#/components/responses/Taken"
  *       422:
  *         $ref: "#/components/responses/Invalid"
  *   delete:
@@ -143,7 +147,7 @@ router.post("/", Controller.shorten);
  *       404:
  *         $ref: "#/components/responses/NotFound"
  */
-router.patch("/:code", Controller.update);
-router.delete("/:code", Controller.remove);
+router.patch("/*code", Controller.update);
+router.delete("/*code", Controller.remove);
 
 export default router;

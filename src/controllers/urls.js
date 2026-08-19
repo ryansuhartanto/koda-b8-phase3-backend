@@ -1,5 +1,6 @@
 import { constants } from "node:http2";
 
+import { reject } from "#/lib/custom.js";
 import * as Service from "#/services/urls.js";
 
 /**
@@ -20,7 +21,19 @@ import * as Service from "#/services/urls.js";
  *       required: [url]
  *       properties:
  *         url: { type: string, format: uri, example: "https://example.com/a/very/long/link" }
+ *         custom: { type: string, example: my/custom/link }
  *   responses:
+ *     Taken:
+ *       description: Custom path is already taken
+ *       content:
+ *         application/json:
+ *           schema:
+ *             allOf:
+ *               - $ref: "#/components/schemas/Failure"
+ *               - type: object
+ *                 properties:
+ *                   message: { example: This custom path is already taken }
+ *                   result: { $ref: "#/components/schemas/FieldErrors" }
  *     NotFound:
  *       description: Short link not found
  *       content:
@@ -36,22 +49,25 @@ import * as Service from "#/services/urls.js";
 /**
  * @typedef UrlBody
  * @property {string} url
+ * @property {string} [custom]
  */
 
 /**
  * @typedef UrlParams
- * @property {string} code
+ * @property {string[]} code
  */
 
 /**
  * @typedef UrlErrors
  * @property {string} [url]
+ * @property {string} [custom]
  */
 
 /**
  * @param {string} url
+ * @param {string} [custom]
  */
-function validate(url) {
+function validate(url, custom) {
 	/** @type {UrlErrors} */
 	const errors = {};
 
@@ -61,12 +77,20 @@ function validate(url) {
 		errors.url = "Invalid url";
 	}
 
+	if (custom) {
+		const rejected = reject(custom);
+
+		if (rejected) {
+			errors.custom = rejected;
+		}
+	}
+
 	return Object.keys(errors).length > 0 ? errors : null;
 }
 
 /** @type {import("express").RequestHandler<UrlParams, import("./type.js").Result<any>>} */
 export const resolve = async (req, res) => {
-	const record = await Service.resolve(req.params.code);
+	const record = await Service.resolve(req.params.code.join("/"));
 
 	if (!record) {
 		return res.status(constants.HTTP_STATUS_NOT_FOUND).json({
@@ -96,8 +120,9 @@ export const list = async (req, res) => {
 
 /** @type {import("express").RequestHandler<{}, import("./type.js").Result<any>, UrlBody>} */
 export const shorten = async (req, res) => {
-	const { url } = req.body ?? {};
-	const errors = validate(url);
+	const { url, custom } = req.body ?? {};
+	const alias = custom === "" ? undefined : custom;
+	const errors = validate(url, alias);
 
 	if (errors) {
 		return res.status(constants.HTTP_STATUS_UNPROCESSABLE_ENTITY).json({
@@ -107,20 +132,32 @@ export const shorten = async (req, res) => {
 		});
 	}
 
+	const record = await Service.shorten(
+		url,
+		/** @type {RequestAuth} */ (req.auth).sub,
+		alias,
+	);
+
+	if (record === false) {
+		return res.status(constants.HTTP_STATUS_CONFLICT).json({
+			success: false,
+			message: "This custom path is already taken",
+			result: { custom: "This custom path is already taken" },
+		});
+	}
+
 	return res.status(constants.HTTP_STATUS_CREATED).json({
 		success: true,
 		message: "Shortened",
-		result: await Service.shorten(
-			url,
-			/** @type {RequestAuth} */ (req.auth).sub,
-		),
+		result: record,
 	});
 };
 
 /** @type {import("express").RequestHandler<UrlParams, import("./type.js").Result<any>, UrlBody>} */
 export const update = async (req, res) => {
-	const { url } = req.body ?? {};
-	const errors = validate(url);
+	const { url, custom } = req.body ?? {};
+	const alias = custom === "" ? undefined : custom;
+	const errors = validate(url, alias);
 
 	if (errors) {
 		return res.status(constants.HTTP_STATUS_UNPROCESSABLE_ENTITY).json({
@@ -131,10 +168,19 @@ export const update = async (req, res) => {
 	}
 
 	const record = await Service.update(
-		req.params.code,
+		req.params.code.join("/"),
 		/** @type {RequestAuth} */ (req.auth).sub,
 		url,
+		alias,
 	);
+
+	if (record === false) {
+		return res.status(constants.HTTP_STATUS_CONFLICT).json({
+			success: false,
+			message: "This custom path is already taken",
+			result: { custom: "This custom path is already taken" },
+		});
+	}
 
 	if (!record) {
 		return res.status(constants.HTTP_STATUS_NOT_FOUND).json({
@@ -154,7 +200,7 @@ export const update = async (req, res) => {
 /** @type {import("express").RequestHandler<UrlParams, import("./type.js").Result<any>>} */
 export const remove = async (req, res) => {
 	const removed = await Service.remove(
-		req.params.code,
+		req.params.code.join("/"),
 		/** @type {RequestAuth} */ (req.auth).sub,
 	);
 

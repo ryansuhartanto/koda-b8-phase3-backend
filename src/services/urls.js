@@ -1,4 +1,4 @@
-import { QueryTypes } from "@sequelize/core";
+import { QueryTypes, UniqueConstraintError } from "@sequelize/core";
 
 import { decode, FINGERPRINT } from "#/lib/code.js";
 import { digest } from "#/lib/uri.js";
@@ -21,26 +21,63 @@ if (!FINGERPRINT.equals(fingerprint)) {
 }
 
 /**
+ * @template T
+ * @param {() => Promise<T>} query
+ */
+async function unique(query) {
+	try {
+		return await query();
+	} catch (error) {
+		if (error instanceof UniqueConstraintError) {
+			return false;
+		}
+
+		throw error;
+	}
+}
+
+/**
+ * @param {string} code
+ */
+function locate(code) {
+	const id = decode(code);
+
+	return id === null ? { custom: code } : { id };
+}
+
+/**
  * @param {string} url
  * @param {string} [owner]
+ * @param {string} [custom]
  */
-export async function shorten(url, owner) {
-	const hash = digest(url);
-	const [record] = await Url.findCreateFind({
-		where: { hash, owner: owner ?? null },
-		defaults: { url, hash, owner },
-	});
+export async function shorten(url, owner, custom) {
+	const urlHash = digest(url);
+	// custom paths are an owner feature, anonymous links only get their code
+	const alias = owner === undefined ? undefined : custom;
 
-	return record;
+	// false on a taken custom path
+	return unique(async () => {
+		const [record] = await Url.findCreateFind({
+			where: { urlHash, owner: owner ?? null },
+			defaults: { url, urlHash, owner, custom: alias },
+		});
+
+		// findCreateFind swallows the failed insert, so a taken custom path comes back as no row
+		if (!record) {
+			return false;
+		}
+
+		return alias === undefined || record.custom === alias
+			? record
+			: record.update({ custom: alias });
+	});
 }
 
 /**
  * @param {string} code
  */
 export async function resolve(code) {
-	const id = decode(code);
-
-	return id === null ? null : Url.findByPk(id);
+	return Url.findOne({ where: locate(code) });
 }
 
 /**
@@ -54,20 +91,22 @@ export async function list(owner) {
  * @param {string} code
  * @param {string} owner
  * @param {string} url
+ * @param {string} [custom]
  */
-export async function update(code, owner, url) {
-	const id = decode(code);
+export async function update(code, owner, url, custom) {
+	// null | false | result
+	return unique(async () => {
+		const [, [record]] = await Url.update(
+			{
+				url,
+				urlHash: digest(url),
+				...(custom === undefined ? {} : { custom }),
+			},
+			{ where: { ...locate(code), owner }, returning: true },
+		);
 
-	if (id === null) {
-		return null;
-	}
-
-	const [, [record]] = await Url.update(
-		{ url, hash: digest(url) },
-		{ where: { id, owner }, returning: true },
-	);
-
-	return record ?? null;
+		return record ?? null;
+	});
 }
 
 /**
@@ -75,7 +114,5 @@ export async function update(code, owner, url) {
  * @param {string} owner
  */
 export async function remove(code, owner) {
-	const id = decode(code);
-
-	return id !== null && (await Url.destroy({ where: { id, owner } })) > 0;
+	return (await Url.destroy({ where: { ...locate(code), owner } })) > 0;
 }

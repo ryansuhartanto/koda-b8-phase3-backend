@@ -116,6 +116,9 @@
 					"404": {
 						"$ref": "#/components/responses/NotFound"
 					},
+					"409": {
+						"$ref": "#/components/responses/Taken"
+					},
 					"422": {
 						"$ref": "#/components/responses/Invalid"
 					}
@@ -248,6 +251,9 @@
 					},
 					"401": {
 						"$ref": "#/components/responses/Unauthorized"
+					},
+					"409": {
+						"$ref": "#/components/responses/Taken"
 					},
 					"422": {
 						"$ref": "#/components/responses/Invalid"
@@ -389,6 +395,31 @@
 					}
 				}
 			},
+			"Taken": {
+				"description": "Custom path is already taken",
+				"content": {
+					"application/json": {
+						"schema": {
+							"allOf": [
+								{
+									"$ref": "#/components/schemas/Failure"
+								},
+								{
+									"type": "object",
+									"properties": {
+										"message": {
+											"example": "This custom path is already taken"
+										},
+										"result": {
+											"$ref": "#/components/schemas/FieldErrors"
+										}
+									}
+								}
+							]
+						}
+					}
+				}
+			},
 			"NotFound": {
 				"description": "Short link not found",
 				"content": {
@@ -470,6 +501,10 @@
 						"type": "string",
 						"format": "uri",
 						"example": "https://example.com/a/very/long/link"
+					},
+					"custom": {
+						"type": "string",
+						"example": "my/custom/link"
 					}
 				}
 			},
@@ -515,6 +550,10 @@
 					"url": {
 						"type": "string",
 						"example": "Invalid url"
+					},
+					"custom": {
+						"type": "string",
+						"example": "This custom path is reserved for our service"
 					}
 				}
 			},

@@ -20,22 +20,33 @@ export class Url extends Model {
 	/**
 	 * @type {Buffer}
 	 */
-	hash;
+	urlHash;
 
 	/**
 	 * @type {string?}
 	 */
 	owner;
 
+	/**
+	 * @type {string?}
+	 */
+	custom;
+
 	encoded() {
-		return encode(BigInt(this.id));
+		return this.custom ?? encode(BigInt(this.id));
 	}
 
 	/**
 	 * @override
 	 */
 	toJSON() {
-		const { id: _, hash: __, owner: ___, ...rest } = super.toJSON();
+		const {
+			id: _,
+			urlHash: __,
+			owner: ___,
+			custom: ____,
+			...rest
+		} = super.toJSON();
 		return { ...rest, encoded: this.encoded() };
 	}
 }
@@ -52,7 +63,7 @@ export class Url extends Model {
 			type: DataTypes.TEXT,
 			allowNull: false,
 		},
-		hash: {
+		urlHash: {
 			type: DataTypes.BLOB,
 			allowNull: false,
 		},
@@ -60,6 +71,10 @@ export class Url extends Model {
 			type: DataTypes.BIGINT,
 			references: { table: "Users", key: "id" },
 			onDelete: "RESTRICT",
+		},
+		custom: {
+			type: DataTypes.TEXT,
+			unique: true,
 		},
 	},
 	{

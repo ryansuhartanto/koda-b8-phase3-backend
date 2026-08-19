@@ -40,6 +40,7 @@ export {};
  *         email: { type: string, example: Missing email field }
  *         password: { type: string, example: Missing password field }
  *         url: { type: string, example: Invalid url }
+ *         custom: { type: string, example: This custom path is reserved for our service }
  *   responses:
  *     Invalid:
  *       description: Invalid fields
