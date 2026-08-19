@@ -3,7 +3,7 @@ import { DataTypes, Model } from "@sequelize/core";
 import sequelize from "#/models/index.js";
 
 // Feistel chipher over a Crockford's base32
-// oxlint-disable no-bitwise
+// oxlint-disable no-bitwise unicorn/number-literal-case
 const ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 const CODE_LENGTH = 10;
 const HALF_BITS = 25n;
