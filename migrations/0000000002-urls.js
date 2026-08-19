@@ -23,7 +23,7 @@ export async function up({ sequelize: { queryInterface } }) {
 			type: DataTypes.TEXT,
 			allowNull: false,
 		},
-		hash: {
+		urlHash: {
 			type: DataTypes.BLOB,
 			allowNull: false,
 		},
@@ -35,15 +35,15 @@ export async function up({ sequelize: { queryInterface } }) {
 	});
 
 	await queryInterface.addIndex("Urls", {
-		fields: ["owner", "hash"],
+		fields: ["urlHash", "owner"],
 		unique: true,
 	});
 
 	// null owners are distinct to a composite unique, so anonymous links need their own index
 	await queryInterface.addIndex("Urls", {
-		fields: ["hash"],
-		unique: true,
+		fields: ["urlHash"],
 		where: { owner: null },
+		unique: true,
 	});
 }
 
