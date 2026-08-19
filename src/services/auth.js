@@ -1,16 +1,20 @@
 import { User } from "#/models/user.js";
 
+export const { verifyToken } = User;
+
 /**
  * @param {string} email
  * @param {string} password
  */
 export async function login(email, password) {
-	let auth;
+	let auth = /** @type {boolean} */ (false);
 
 	const user = await User.withScope("withPassword")
 		.afterFind(async (result) => {
 			const user = /** @type {User?} */ (result);
-			auth = (await user?.verifyPassword(password)) ?? false;
+			if (user) {
+				auth = await user.verifyPassword(password);
+			}
 		})
 		.findOne({
 			where: { email },
@@ -21,8 +25,8 @@ export async function login(email, password) {
 		user.password = undefined;
 	}
 
-	// null | false | User
-	return user && auth && user;
+	// null | false | result
+	return user && auth && { user, token: user.signToken() };
 }
 
 /**
@@ -40,5 +44,6 @@ export async function register(email, password) {
 		},
 	});
 
-	return created && user;
+	// false | result
+	return created && { user, token: user.signToken() };
 }

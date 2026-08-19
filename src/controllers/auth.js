@@ -14,7 +14,7 @@ import * as Service from "#/services/auth.js";
  * @property {string} [password]
  */
 
-/** @type {import("express").RequestHandler<{}, import("./type").Result<AuthResult, import("../models/user").User>, AuthQuery>} */
+/** @type {import("express").RequestHandler<{}, import("./type").Result<AuthResult, any>, AuthQuery>} */
 export const login = async (req, res) => {
 	const { email, password } = req.body ?? {};
 	/** @type {AuthResult} */
@@ -58,7 +58,7 @@ export const login = async (req, res) => {
 	});
 };
 
-/** @type {import("express").RequestHandler<{}, import("./type").Result<AuthResult, import("../models/user").User>, AuthQuery>} */
+/** @type {import("express").RequestHandler<{}, import("./type").Result<AuthResult, any>, AuthQuery>} */
 export const register = async (req, res) => {
 	const { email, password } = req.body ?? {};
 	/** @type {AuthResult} */
