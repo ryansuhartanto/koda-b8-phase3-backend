@@ -38,7 +38,7 @@ const cors = (req, res, next) => {
 		// TODO: limit origin
 		Origin: ["*"],
 		Methods: ["OPTIONS"],
-		Headers: ["Origin", "Content-Type"],
+		Headers: ["Origin", "Content-Type", "Authorization"],
 	};
 
 	// @ts-ignore
