@@ -1,7 +1,7 @@
 import { hkdfSync } from "node:crypto";
 
 import { DataTypes, Model } from "@sequelize/core";
-import siphash13 from "siphash/lib/siphash13";
+import siphash13 from "siphash/lib/siphash13.js";
 
 import sequelize from "#/models/index.js";
 

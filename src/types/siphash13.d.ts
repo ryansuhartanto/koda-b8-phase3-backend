@@ -1,4 +1,4 @@
-declare module "siphash/lib/siphash13" {
+declare module "siphash/lib/siphash13.js" {
 	interface IU64 {
 		h: number;
 		l: number;
