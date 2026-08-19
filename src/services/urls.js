@@ -1,8 +1,9 @@
 import { QueryTypes } from "@sequelize/core";
 
+import { decode, FINGERPRINT } from "#/lib/code.js";
+import { digest } from "#/lib/uri.js";
 import sequelize from "#/models/index.js";
-import { UrlOwner } from "#/models/url-owner.js";
-import { FINGERPRINT, Url } from "#/models/url.js";
+import { Url } from "#/models/url.js";
 
 // DO UPDATE, not DO NOTHING: only an update returns the row that is already stored
 const [{ fingerprint }] = /** @type {[{ fingerprint: Buffer }]} */ (
@@ -20,96 +21,61 @@ if (!FINGERPRINT.equals(fingerprint)) {
 }
 
 /**
- * @param {string} code
- * @param {string} userId
- * @param {import("@sequelize/core").Transaction} transaction
- */
-async function ownedId(code, userId, transaction) {
-	const id = Url.decodeId(code);
-
-	if (id === null) {
-		return null;
-	}
-
-	const owner = await UrlOwner.findOne({
-		where: { urlId: id, userId },
-		transaction,
-		lock: true,
-	});
-
-	return owner && id;
-}
-
-/**
  * @param {string} url
- * @param {string} userId
+ * @param {string} [owner]
  */
-export async function shorten(url, userId) {
-	return sequelize.transaction(async (transaction) => {
-		const created = await Url.create({ url }, { transaction });
-		await UrlOwner.create(
-			{ urlId: String(created.id), userId },
-			{ transaction },
-		);
-
-		return created;
+export async function shorten(url, owner) {
+	const hash = digest(url);
+	const [record] = await Url.findCreateFind({
+		where: { hash, owner: owner ?? null },
+		defaults: { url, hash, owner },
 	});
+
+	return record;
 }
 
 /**
  * @param {string} code
  */
 export async function resolve(code) {
-	const id = Url.decodeId(code);
+	const id = decode(code);
 
 	return id === null ? null : Url.findByPk(id);
 }
 
 /**
- * @param {string} userId
+ * @param {string} owner
  */
-export async function list(userId) {
-	return Url.findAll({
-		include: { model: UrlOwner, where: { userId }, attributes: [] },
-	});
+export async function list(owner) {
+	return Url.findAll({ where: { owner } });
 }
 
 /**
  * @param {string} code
- * @param {string} userId
+ * @param {string} owner
  * @param {string} url
  */
-export async function update(code, userId, url) {
-	return sequelize.transaction(async (transaction) => {
-		const id = await ownedId(code, userId, transaction);
+export async function update(code, owner, url) {
+	const id = decode(code);
 
-		if (!id) {
-			return null;
-		}
+	if (id === null) {
+		return null;
+	}
 
-		const [, [record]] = await Url.update(
-			{ url },
-			{ where: { id }, returning: true, transaction },
-		);
+	const [, [record]] = await Url.update(
+		{ url, hash: digest(url) },
+		{ where: { id, owner }, returning: true },
+	);
 
-		return record ?? null;
-	});
+	return record ?? null;
 }
 
 /**
  * @param {string} code
- * @param {string} userId
+ * @param {string} owner
  */
-export async function remove(code, userId) {
-	return sequelize.transaction(async (transaction) => {
-		const id = await ownedId(code, userId, transaction);
+export async function remove(code, owner) {
+	const id = decode(code);
 
-		if (!id) {
-			return false;
-		}
-
-		await Url.destroy({ where: { id }, transaction });
-
-		return true;
-	});
+	return id !== null && (await Url.destroy({ where: { id, owner } })) > 0;
 }

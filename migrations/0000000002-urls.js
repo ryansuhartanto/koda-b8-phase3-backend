@@ -23,38 +23,31 @@ export async function up({ sequelize: { queryInterface } }) {
 			type: DataTypes.TEXT,
 			allowNull: false,
 		},
+		hash: {
+			type: DataTypes.BLOB,
+			allowNull: false,
+		},
+		owner: {
+			type: DataTypes.BIGINT,
+			references: { table: "Users", key: "id" },
+			onDelete: "RESTRICT",
+		},
 	});
 
-	await queryInterface.createTable("UrlOwners", {
-		urlId: {
-			primaryKey: true,
-			type: DataTypes.BIGINT,
-			allowNull: false,
-			references: { table: "Urls", key: "id" },
-			onDelete: "CASCADE",
-		},
-		userId: {
-			primaryKey: true,
-			type: DataTypes.BIGINT,
-			allowNull: false,
-			references: { table: "Users", key: "id" },
-			onDelete: "CASCADE",
-		},
-		createdAt: {
-			allowNull: false,
-			type: DataTypes.DATE,
-			defaultValue: DataTypes.NOW,
-		},
-		updatedAt: {
-			allowNull: false,
-			type: DataTypes.DATE,
-			defaultValue: DataTypes.NOW,
-		},
+	await queryInterface.addIndex("Urls", {
+		fields: ["owner", "hash"],
+		unique: true,
+	});
+
+	// null owners are distinct to a composite unique, so anonymous links need their own index
+	await queryInterface.addIndex("Urls", {
+		fields: ["hash"],
+		unique: true,
+		where: { owner: null },
 	});
 }
 
 /** @type {import("sqlumz").MigrationFunction} */
 export async function down({ sequelize: { queryInterface } }) {
-	await queryInterface.dropTable("UrlOwners");
 	await queryInterface.dropTable("Urls");
 }
