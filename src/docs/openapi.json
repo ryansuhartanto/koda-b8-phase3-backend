@@ -244,6 +244,7 @@
 			"post": {
 				"tags": ["auth"],
 				"summary": "Authenticate",
+				"security": [],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -295,6 +296,7 @@
 			"post": {
 				"tags": ["auth"],
 				"summary": "Register",
+				"security": [],
 				"requestBody": {
 					"required": true,
 					"content": {
