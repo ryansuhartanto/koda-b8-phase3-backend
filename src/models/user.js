@@ -16,7 +16,7 @@ if (!JWT_SECRET) {
  */
 export class User extends Model {
 	/**
-	 * @type {import("@sequelize/core").CreationOptional<number>}
+	 * @type {import("@sequelize/core").CreationOptional<string>}
 	 */
 	id;
 
