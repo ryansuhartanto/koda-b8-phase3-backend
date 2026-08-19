@@ -39,7 +39,7 @@ export class User extends Model {
 	}
 
 	signToken() {
-		return jwt.sign(this.email, /** @type {string} */ (JWT_SECRET), {
+		return jwt.sign(this.id, /** @type {string} */ (JWT_SECRET), {
 			expiresIn: JWT_EXPIRES_IN,
 		});
 	}
