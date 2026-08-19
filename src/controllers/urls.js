@@ -141,6 +141,15 @@ export const list = async (req, res) => {
 export const shorten = async (req, res) => {
 	const { url, custom } = req.body ?? {};
 	const alias = custom === "" ? undefined : custom;
+
+	if (alias && !req.auth) {
+		return res.status(constants.HTTP_STATUS_UNAUTHORIZED).json({
+			success: false,
+			message: "A custom path requires an account",
+			result: null,
+		});
+	}
+
 	const errors = validate(url, alias);
 
 	if (errors) {
@@ -151,11 +160,7 @@ export const shorten = async (req, res) => {
 		});
 	}
 
-	const record = await Service.shorten(
-		url,
-		/** @type {RequestAuth} */ (req.auth).sub,
-		alias,
-	);
+	const record = await Service.shorten(url, req.auth?.sub, alias);
 
 	if (record === false) {
 		return res.status(constants.HTTP_STATUS_CONFLICT).json({

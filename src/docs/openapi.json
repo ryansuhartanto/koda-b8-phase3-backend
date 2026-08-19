@@ -164,6 +164,65 @@
 			}
 		},
 		"/urls": {
+			"post": {
+				"tags": ["urls"],
+				"summary": "Shorten a url",
+				"description": "Anonymous unless a custom path is given, which requires a token.",
+				"security": [
+					{},
+					{
+						"JWT": []
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UrlInput"
+							}
+						},
+						"application/x-www-form-urlencoded": {
+							"schema": {
+								"$ref": "#/components/schemas/UrlInput"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Shortened",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/Result"
+										},
+										{
+											"type": "object",
+											"properties": {
+												"result": {
+													"$ref": "#/components/schemas/Url"
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"$ref": "#/components/responses/Unauthorized"
+					},
+					"409": {
+						"$ref": "#/components/responses/Taken"
+					},
+					"422": {
+						"$ref": "#/components/responses/Invalid"
+					}
+				}
+			},
 			"get": {
 				"tags": ["urls"],
 				"summary": "List owned short links",
@@ -224,63 +283,6 @@
 					},
 					"401": {
 						"$ref": "#/components/responses/Unauthorized"
-					}
-				}
-			},
-			"post": {
-				"tags": ["urls"],
-				"summary": "Shorten a url",
-				"security": [
-					{
-						"JWT": []
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UrlInput"
-							}
-						},
-						"application/x-www-form-urlencoded": {
-							"schema": {
-								"$ref": "#/components/schemas/UrlInput"
-							}
-						}
-					}
-				},
-				"responses": {
-					"201": {
-						"description": "Shortened",
-						"content": {
-							"application/json": {
-								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/Result"
-										},
-										{
-											"type": "object",
-											"properties": {
-												"result": {
-													"$ref": "#/components/schemas/Url"
-												}
-											}
-										}
-									]
-								}
-							}
-						}
-					},
-					"401": {
-						"$ref": "#/components/responses/Unauthorized"
-					},
-					"409": {
-						"$ref": "#/components/responses/Taken"
-					},
-					"422": {
-						"$ref": "#/components/responses/Invalid"
 					}
 				}
 			}

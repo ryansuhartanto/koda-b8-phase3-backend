@@ -33,6 +33,54 @@ const router = Router();
  */
 router.get("/*code", Controller.resolve);
 
+/** @type {import("express").RequestHandler<{}, import("#/controllers/type.js").Result<import("#/middleware/auth.js").AuthMiddlewareResult>>} */
+const optional = (req, res, next) =>
+	req.headers.authorization
+		? auth(
+				// auth types its request as AuthMiddlewareBody, which no mounted route carries
+				/** @type {Parameters<typeof auth>[0]} */ (
+					/** @type {unknown} */ (req)
+				),
+				res,
+				next,
+			)
+		: next();
+
+/**
+ * @openapi
+ * /urls:
+ *   post:
+ *     tags: [urls]
+ *     summary: Shorten a url
+ *     description: Anonymous unless a custom path is given, which requires a token.
+ *     security: [{}, { JWT: [] }]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: "#/components/schemas/UrlInput" }
+ *         application/x-www-form-urlencoded:
+ *           schema: { $ref: "#/components/schemas/UrlInput" }
+ *     responses:
+ *       201:
+ *         description: Shortened
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: "#/components/schemas/Result"
+ *                 - type: object
+ *                   properties:
+ *                     result: { $ref: "#/components/schemas/Url" }
+ *       401:
+ *         $ref: "#/components/responses/Unauthorized"
+ *       409:
+ *         $ref: "#/components/responses/Taken"
+ *       422:
+ *         $ref: "#/components/responses/Invalid"
+ */
+router.post("/", optional, Controller.shorten);
+
 router.use(auth);
 
 /**
@@ -65,37 +113,8 @@ router.use(auth);
  *                       items: { $ref: "#/components/schemas/Url" }
  *       401:
  *         $ref: "#/components/responses/Unauthorized"
- *   post:
- *     tags: [urls]
- *     summary: Shorten a url
- *     security: [{ JWT: [] }]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema: { $ref: "#/components/schemas/UrlInput" }
- *         application/x-www-form-urlencoded:
- *           schema: { $ref: "#/components/schemas/UrlInput" }
- *     responses:
- *       201:
- *         description: Shortened
- *         content:
- *           application/json:
- *             schema:
- *               allOf:
- *                 - $ref: "#/components/schemas/Result"
- *                 - type: object
- *                   properties:
- *                     result: { $ref: "#/components/schemas/Url" }
- *       401:
- *         $ref: "#/components/responses/Unauthorized"
- *       409:
- *         $ref: "#/components/responses/Taken"
- *       422:
- *         $ref: "#/components/responses/Invalid"
  */
 router.get("/", Controller.list);
-router.post("/", Controller.shorten);
 
 /**
  * @openapi
