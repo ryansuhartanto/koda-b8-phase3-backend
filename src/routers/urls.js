@@ -42,6 +42,13 @@ router.use(auth);
  *     tags: [urls]
  *     summary: List owned short links
  *     security: [{ JWT: [] }]
+ *     parameters:
+ *       - name: page
+ *         in: query
+ *         schema: { type: integer, minimum: 1, default: 1 }
+ *       - name: limit
+ *         in: query
+ *         schema: { type: integer, minimum: 1, default: 20 }
  *     responses:
  *       200:
  *         description: Listed
@@ -52,6 +59,7 @@ router.use(auth);
  *                 - $ref: "#/components/schemas/Result"
  *                 - type: object
  *                   properties:
+ *                     total: { type: integer, example: 42 }
  *                     result:
  *                       type: array
  *                       items: { $ref: "#/components/schemas/Url" }

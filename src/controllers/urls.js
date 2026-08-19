@@ -57,11 +57,23 @@ import * as Service from "#/services/urls.js";
  * @property {string[]} code
  */
 
+const PAGE_SIZE = 20;
+
 /**
  * @typedef UrlErrors
  * @property {string} [url]
  * @property {string} [custom]
  */
+
+/**
+ * @param {unknown} value
+ * @param {number} fallback
+ */
+function counted(value, fallback) {
+	const parsed = Number(value);
+
+	return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
+}
 
 /**
  * @param {string} url
@@ -107,14 +119,21 @@ export const resolve = async (req, res) => {
 	});
 };
 
-/** @type {import("express").RequestHandler<{}, import("./type.js").Result<any>>} */
+/** @type {import("express").RequestHandler<{}, import("./type.js").Result<any> & { total: number }>} */
 export const list = async (req, res) => {
-	const records = await Service.list(/** @type {RequestAuth} */ (req.auth).sub);
+	const limit = counted(req.query["limit"], PAGE_SIZE);
+	const page = counted(req.query["page"], 1);
+	const { rows, count } = await Service.list(
+		/** @type {RequestAuth} */ (req.auth).sub,
+		limit,
+		(page - 1) * limit,
+	);
 
 	return res.json({
 		success: true,
 		message: "Listed",
-		result: records,
+		total: count,
+		result: rows,
 	});
 };
 

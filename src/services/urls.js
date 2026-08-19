@@ -82,9 +82,16 @@ export async function resolve(code) {
 
 /**
  * @param {string} owner
+ * @param {number} limit
+ * @param {number} offset
  */
-export async function list(owner) {
-	return Url.findAll({ where: { owner } });
+export async function list(owner, limit, offset) {
+	return Url.findAndCountAll({
+		where: { owner },
+		order: [["id", "ASC"]],
+		limit,
+		offset,
+	});
 }
 
 /**
