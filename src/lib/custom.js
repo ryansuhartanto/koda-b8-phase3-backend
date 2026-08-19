@@ -1,6 +1,5 @@
 import { decode } from "#/lib/code.js";
 
-const RESERVED = /^(auth|docs|openapi\.json|urls)(\/|$)/i;
 // QR alphanumeric mode
 const ALLOWED = /^[\d$%*+./:A-Za-z-]+$/;
 const LIMIT = 255;
@@ -27,10 +26,13 @@ function canonical(path) {
 
 /**
  * @param {string} custom
+ * @param {string[]} [reserved]
  * @returns {string?}
  */
-export function reject(custom) {
-	if (RESERVED.test(custom)) {
+export function reject(custom, reserved = []) {
+	const [root] = custom.toLowerCase().split("/");
+
+	if (reserved.some((path) => path.toLowerCase() === root)) {
 		return "This custom path is reserved for our service";
 	}
 

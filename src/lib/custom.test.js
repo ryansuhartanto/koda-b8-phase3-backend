@@ -3,11 +3,13 @@ import { describe, expect, it } from "vite-plus/test";
 import { encode } from "#/lib/code.js";
 import { reject } from "#/lib/custom.js";
 
+const RESERVED = ["taken", "Dotted.Path"];
+
 describe("custom path rules", () => {
-	it.each(["auth", "Docs", "openapi.json", "urls/mine"])(
+	it.each(["taken", "TAKEN", "dotted.path", "taken/deeper"])(
 		"reserves %s",
 		(custom) => {
-			expect(reject(custom)).toBe(
+			expect(reject(custom, RESERVED)).toBe(
 				"This custom path is reserved for our service",
 			);
 		},
@@ -16,7 +18,9 @@ describe("custom path rules", () => {
 	it.each([encode(42n), encode(42n).toLowerCase(), "abcd-efghij"])(
 		"refuses the generated code space: %s",
 		(custom) => {
-			expect(reject(custom)).toMatch(/^This custom path matches the format/);
+			expect(reject(custom, RESERVED)).toMatch(
+				/^This custom path matches the format/,
+			);
 		},
 	);
 
@@ -28,12 +32,12 @@ describe("custom path rules", () => {
 		"mailto:someone",
 		"/leading",
 		"trailing/",
-		"go/../auth",
+		"go/../up",
 		"ask?q=1",
 		"frag#ment",
 		"https://example.com",
 	])("refuses malformed %s", (custom) => {
-		expect(reject(custom)).toBe("Invalid custom path");
+		expect(reject(custom, RESERVED)).toBe("Invalid custom path");
 	});
 
 	it.each([
@@ -45,6 +49,6 @@ describe("custom path rules", () => {
 		"a+b%20c",
 		"*star",
 	])("accepts %s", (custom) => {
-		expect(reject(custom)).toBeNull();
+		expect(reject(custom, RESERVED)).toBeNull();
 	});
 });

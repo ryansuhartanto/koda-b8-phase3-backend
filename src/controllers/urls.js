@@ -22,6 +22,11 @@ import * as Service from "#/services/urls.js";
  *       properties:
  *         url: { type: string, format: uri, example: "https://example.com/a/very/long/link" }
  *         custom: { type: string, example: my/custom/link }
+ *         reserved:
+ *           type: array
+ *           description: Paths the caller's own frontend already uses, refused as custom paths.
+ *           items: { type: string }
+ *           example: [login, dashboard]
  *   responses:
  *     Taken:
  *       description: Custom path is already taken
@@ -50,6 +55,7 @@ import * as Service from "#/services/urls.js";
  * @typedef UrlBody
  * @property {string} url
  * @property {string} [custom]
+ * @property {string[]} [reserved]
  */
 
 /**
@@ -67,6 +73,19 @@ const PAGE_SIZE = 20;
 
 /**
  * @param {unknown} value
+ */
+function listed(value) {
+	const values = /** @type {unknown[]} */ (
+		Array.isArray(value) ? value : [value]
+	);
+
+	return values.flatMap((item) =>
+		typeof item === "string" && item !== "" ? [item] : [],
+	);
+}
+
+/**
+ * @param {unknown} value
  * @param {number} fallback
  */
 function counted(value, fallback) {
@@ -78,8 +97,9 @@ function counted(value, fallback) {
 /**
  * @param {string} url
  * @param {string} [custom]
+ * @param {unknown} [reserved]
  */
-function validate(url, custom) {
+function validate(url, custom, reserved) {
 	/** @type {UrlErrors} */
 	const errors = {};
 
@@ -90,7 +110,7 @@ function validate(url, custom) {
 	}
 
 	if (custom) {
-		const rejected = reject(custom);
+		const rejected = reject(custom, listed(reserved));
 
 		if (rejected) {
 			errors.custom = rejected;
@@ -139,7 +159,7 @@ export const list = async (req, res) => {
 
 /** @type {import("express").RequestHandler<{}, import("./type.js").Result<any>, UrlBody>} */
 export const shorten = async (req, res) => {
-	const { url, custom } = req.body ?? {};
+	const { url, custom, reserved } = req.body ?? {};
 	const alias = custom === "" ? undefined : custom;
 
 	if (alias && !req.auth) {
@@ -150,7 +170,7 @@ export const shorten = async (req, res) => {
 		});
 	}
 
-	const errors = validate(url, alias);
+	const errors = validate(url, alias, reserved);
 
 	if (errors) {
 		return res.status(constants.HTTP_STATUS_UNPROCESSABLE_ENTITY).json({
@@ -179,9 +199,9 @@ export const shorten = async (req, res) => {
 
 /** @type {import("express").RequestHandler<UrlParams, import("./type.js").Result<any>, UrlBody>} */
 export const update = async (req, res) => {
-	const { url, custom } = req.body ?? {};
+	const { url, custom, reserved } = req.body ?? {};
 	const alias = custom === "" ? undefined : custom;
-	const errors = validate(url, alias);
+	const errors = validate(url, alias, reserved);
 
 	if (errors) {
 		return res.status(constants.HTTP_STATUS_UNPROCESSABLE_ENTITY).json({
