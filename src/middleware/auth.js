@@ -52,7 +52,7 @@ export default auth;
  * @openapi
  * components:
  *   securitySchemes:
- *     bearerAuth:
+ *     JWT:
  *       type: http
  *       scheme: bearer
  *       bearerFormat: JWT

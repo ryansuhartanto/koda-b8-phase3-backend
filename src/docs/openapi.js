@@ -14,7 +14,7 @@ const spec = swaggerJsdoc({
 			version: "1.0.0",
 			license: { name: "MIT", identifier: "MIT" },
 		},
-		security: [{ bearerAuth: [] }],
+		security: [{ JWT: [] }],
 	},
 });
 

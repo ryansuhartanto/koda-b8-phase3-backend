@@ -10,7 +10,7 @@
 	},
 	"security": [
 		{
-			"bearerAuth": []
+			"JWT": []
 		}
 	],
 	"paths": {
@@ -347,7 +347,7 @@
 	},
 	"components": {
 		"securitySchemes": {
-			"bearerAuth": {
+			"JWT": {
 				"type": "http",
 				"scheme": "bearer",
 				"bearerFormat": "JWT"
