@@ -3,6 +3,29 @@ import { constants } from "node:http2";
 import * as Service from "#/services/auth.js";
 
 /**
+ * @openapi
+ * tags:
+ *   - name: auth
+ *     description: Registration and login
+ * components:
+ *   schemas:
+ *     Credentials:
+ *       type: object
+ *       required: [email, password]
+ *       properties:
+ *         email: { type: string, format: email }
+ *         password: { type: string }
+ *     Auth:
+ *       type: object
+ *       properties:
+ *         user:
+ *           type: object
+ *           properties:
+ *             email: { type: string, format: email }
+ *         token: { type: string }
+ */
+
+/**
  * @typedef AuthQuery
  * @property {string} email
  * @property {string} password

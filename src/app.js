@@ -1,5 +1,6 @@
 import express from "express";
 
+import openapi from "#/docs/openapi.json" with { type: "json" };
 import cors from "#/middleware/cors.js";
 import auth from "#/routers/auth.js";
 import urls from "#/routers/urls.js";
@@ -12,8 +13,11 @@ app.use(cors);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (_req, res) => {
-	res.send("Hello, World!");
+app.get("/openapi.json", (req, res) => {
+	res.json({
+		...openapi,
+		servers: [{ url: `${req.protocol}://${req.get("host")}` }],
+	});
 });
 
 app.use("/auth", auth);

@@ -3,6 +3,28 @@ import { constants } from "node:http2";
 import * as Service from "#/services/urls.js";
 
 /**
+ * @openapi
+ * tags:
+ *   - name: urls
+ *     description: Short link management
+ * components:
+ *   schemas:
+ *     Url:
+ *       type: object
+ *       properties:
+ *         url: { type: string, format: uri }
+ *         encoded: { type: string }
+ *         createdAt: { type: string, format: date-time }
+ *         updatedAt: { type: string, format: date-time }
+ *   responses:
+ *     NotFound:
+ *       description: Short link is not found
+ *       content:
+ *         application/json:
+ *           schema: { $ref: "#/components/schemas/Result" }
+ */
+
+/**
  * @typedef UrlBody
  * @property {string} url
  */

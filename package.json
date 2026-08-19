@@ -1,5 +1,6 @@
 {
 	"name": "koda-b8-phase3-backend",
+	"version": "1.0.0",
 	"license": "MIT",
 	"author": "Ryan Suhartanto <suhartanto@kekkon.nexus>",
 	"repository": "ryansuhartanto/koda-b8-phase3-backend",
@@ -9,6 +10,7 @@
 	},
 	"scripts": {
 		"db": "sqlumz",
+		"docs": "node src/docs/openapi.js",
 		"build": "vp pack",
 		"dev": "vp pack --watch --on-success 'node --enable-source-maps dist/index.mjs'",
 		"fmt": "vp fmt",
@@ -28,11 +30,13 @@
 		"@types/express": "^5.0.6",
 		"@types/jsonwebtoken": "^9.0.10",
 		"@types/node": "^26.1.2",
+		"@types/swagger-jsdoc": "^6.0.4",
 		"eslint-plugin-no-relative-import-paths": "^1.6.1",
 		"oxfmt": ">=0.63.0 <1",
 		"oxlint": "^1.78.0",
 		"oxlint-tsgolint": "^7.0.2001",
 		"sqlumz": "^0.3.0",
+		"swagger-jsdoc": "^6.3.0",
 		"typescript": "^7.0.2",
 		"vite-plus": "^0.2.9"
 	},

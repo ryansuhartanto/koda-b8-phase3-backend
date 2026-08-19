@@ -47,3 +47,19 @@ const auth = (req, res, next) => {
 };
 
 export default auth;
+
+/**
+ * @openapi
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ *   responses:
+ *     Unauthorized:
+ *       description: Missing, malformed or expired token
+ *       content:
+ *         application/json:
+ *           schema: { $ref: "#/components/schemas/Result" }
+ */

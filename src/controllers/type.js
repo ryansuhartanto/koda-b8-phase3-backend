@@ -2,6 +2,19 @@
 export {};
 
 /**
+ * @openapi
+ * components:
+ *   schemas:
+ *     Result:
+ *       type: object
+ *       required: [success, message, result]
+ *       properties:
+ *         success: { type: boolean }
+ *         message: { type: string }
+ *         result: {}
+ */
+
+/**
  * @template [E = unknown]
  * @template [D = E]
  * @template [S = boolean]
@@ -10,4 +23,27 @@ export {};
  * @property {S} success
  * @property {string} message
  * @property {R} result
+ */
+
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     FieldErrors:
+ *       type: object
+ *       properties:
+ *         email: { type: string }
+ *         password: { type: string }
+ *         url: { type: string }
+ *   responses:
+ *     Invalid:
+ *       description: Missing or invalid fields
+ *       content:
+ *         application/json:
+ *           schema:
+ *             allOf:
+ *               - $ref: "#/components/schemas/Result"
+ *               - type: object
+ *                 properties:
+ *                   result: { $ref: "#/components/schemas/FieldErrors" }
  */
