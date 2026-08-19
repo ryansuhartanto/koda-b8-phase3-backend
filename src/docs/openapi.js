@@ -10,7 +10,7 @@ const spec = swaggerJsdoc({
 	definition: {
 		openapi: "3.1.0",
 		info: {
-			title: "ShortLink API",
+			title: "ShortLink",
 			version: "1.0.0",
 			license: { name: "MIT", identifier: "MIT" },
 		},
