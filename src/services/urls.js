@@ -5,8 +5,9 @@ import { Url } from "#/models/url.js";
 /**
  * @param {string} code
  * @param {string} userId
+ * @param {import("@sequelize/core").Transaction} transaction
  */
-async function ownedId(code, userId) {
+async function ownedId(code, userId, transaction) {
 	const id = Url.decodeId(code);
 
 	if (id === null) {
@@ -15,6 +16,8 @@ async function ownedId(code, userId) {
 
 	const owner = await UrlOwner.findOne({
 		where: { urlId: id, userId },
+		transaction,
+		lock: true,
 	});
 
 	return owner && id;
@@ -49,9 +52,9 @@ export async function resolve(code) {
  * @param {string} userId
  */
 export async function list(userId) {
-	const owned = await UrlOwner.findAll({ where: { userId } });
-
-	return Url.findAll({ where: { id: owned.map(({ urlId }) => urlId) } });
+	return Url.findAll({
+		include: { model: UrlOwner, where: { userId }, attributes: [] },
+	});
 }
 
 /**
@@ -60,15 +63,20 @@ export async function list(userId) {
  * @param {string} url
  */
 export async function update(code, userId, url) {
-	const id = await ownedId(code, userId);
+	return sequelize.transaction(async (transaction) => {
+		const id = await ownedId(code, userId, transaction);
 
-	if (!id) {
-		return null;
-	}
+		if (!id) {
+			return null;
+		}
 
-	const record = await Url.findByPk(id);
+		const [, [record]] = await Url.update(
+			{ url },
+			{ where: { id }, returning: true, transaction },
+		);
 
-	return (await record?.update({ url })) ?? null;
+		return record ?? null;
+	});
 }
 
 /**
@@ -76,13 +84,15 @@ export async function update(code, userId, url) {
  * @param {string} userId
  */
 export async function remove(code, userId) {
-	const id = await ownedId(code, userId);
+	return sequelize.transaction(async (transaction) => {
+		const id = await ownedId(code, userId, transaction);
 
-	if (!id) {
-		return false;
-	}
+		if (!id) {
+			return false;
+		}
 
-	await Url.destroy({ where: { id } });
+		await Url.destroy({ where: { id }, transaction });
 
-	return true;
+		return true;
+	});
 }

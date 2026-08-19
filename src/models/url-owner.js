@@ -1,6 +1,7 @@
 import { DataTypes, Model } from "@sequelize/core";
 
 import sequelize from "#/models/index.js";
+import { Url } from "#/models/url.js";
 
 /**
  * @extends {Model<import("@sequelize/core").InferAttributes<UrlOwner>, import("@sequelize/core").InferCreationAttributes<UrlOwner>> }
@@ -38,3 +39,5 @@ export class UrlOwner extends Model {
 		sequelize,
 	},
 );
+
+Url.hasMany(UrlOwner, { foreignKey: "urlId", inverse: { as: "url" } });
