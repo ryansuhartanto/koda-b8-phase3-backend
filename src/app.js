@@ -2,6 +2,7 @@ import express from "express";
 
 import cors from "#/middleware/cors.js";
 import auth from "#/routers/auth.js";
+import urls from "#/routers/urls.js";
 
 /** @type {import("express").Express} */
 const app = express();
@@ -16,5 +17,6 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/auth", auth);
+app.use("/urls", urls);
 
 export default app;

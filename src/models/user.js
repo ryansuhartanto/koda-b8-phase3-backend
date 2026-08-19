@@ -39,9 +39,16 @@ export class User extends Model {
 	}
 
 	signToken() {
-		return jwt.sign(this.id, /** @type {string} */ (JWT_SECRET), {
-			expiresIn: JWT_EXPIRES_IN,
-		});
+		return jwt.sign(
+			{
+				email: this.email,
+			},
+			/** @type {string} */ (JWT_SECRET),
+			{
+				subject: this.id,
+				expiresIn: JWT_EXPIRES_IN,
+			},
+		);
 	}
 
 	/**
@@ -49,7 +56,9 @@ export class User extends Model {
 	 */
 	static verifyToken(token) {
 		try {
-			return jwt.verify(token, /** @type {string} */ (JWT_SECRET));
+			return /** @type {import("jsonwebtoken").JwtPayload & { sub: string; email: string }} */ (
+				jwt.verify(token, /** @type {string} */ (JWT_SECRET))
+			);
 		} catch {
 			return null;
 		}

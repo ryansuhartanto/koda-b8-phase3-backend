@@ -41,7 +41,7 @@ const auth = (req, res, next) => {
 		});
 	}
 
-	req.userId = /** @type {string} */ (decoded);
+	req.auth = decoded;
 
 	next();
 };
