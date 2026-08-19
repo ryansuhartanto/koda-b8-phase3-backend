@@ -25,7 +25,12 @@ import * as Service from "#/services/urls.js";
  *       description: Short link not found
  *       content:
  *         application/json:
- *           schema: { $ref: "#/components/schemas/Result" }
+ *           schema:
+ *             allOf:
+ *               - $ref: "#/components/schemas/Failure"
+ *               - type: object
+ *                 properties:
+ *                   message: { example: Short link is not found }
  */
 
 /**

@@ -61,5 +61,10 @@ export default auth;
  *       description: Invalid token
  *       content:
  *         application/json:
- *           schema: { $ref: "#/components/schemas/Result" }
+ *           schema:
+ *             allOf:
+ *               - $ref: "#/components/schemas/Failure"
+ *               - type: object
+ *                 properties:
+ *                   message: { example: Malformed or expired token. }
  */

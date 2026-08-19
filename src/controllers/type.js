@@ -9,9 +9,14 @@ export {};
  *       type: object
  *       required: [success, message, result]
  *       properties:
- *         success: { type: boolean }
+ *         success: { type: boolean, const: true }
  *         message: { type: string }
  *         result: {}
+ *     Failure:
+ *       allOf:
+ *         - $ref: "#/components/schemas/Result"
+ *         - properties:
+ *             success: { const: false }
  */
 
 /**
@@ -42,8 +47,9 @@ export {};
  *         application/json:
  *           schema:
  *             allOf:
- *               - $ref: "#/components/schemas/Result"
+ *               - $ref: "#/components/schemas/Failure"
  *               - type: object
  *                 properties:
+ *                   message: { example: Missing fields }
  *                   result: { $ref: "#/components/schemas/FieldErrors" }
  */

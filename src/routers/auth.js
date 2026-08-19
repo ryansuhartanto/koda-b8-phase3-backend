@@ -11,7 +11,6 @@ const router = Router();
  *   post:
  *     tags: [auth]
  *     summary: Authenticate
- *     security: []
  *     requestBody:
  *       required: true
  *       content:
@@ -43,7 +42,6 @@ router.post("/login", Controller.login);
  *   post:
  *     tags: [auth]
  *     summary: Register
- *     security: []
  *     requestBody:
  *       required: true
  *       content:

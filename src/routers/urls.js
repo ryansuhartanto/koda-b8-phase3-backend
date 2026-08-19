@@ -12,7 +12,6 @@ const router = Router();
  *   get:
  *     tags: [urls]
  *     summary: Resolve a short code
- *     security: []
  *     parameters:
  *       - name: code
  *         in: path
@@ -42,6 +41,7 @@ router.use(auth);
  *   get:
  *     tags: [urls]
  *     summary: List owned short links
+ *     security: [{ JWT: [] }]
  *     responses:
  *       200:
  *         description: Listed
@@ -60,6 +60,7 @@ router.use(auth);
  *   post:
  *     tags: [urls]
  *     summary: Shorten a url
+ *     security: [{ JWT: [] }]
  *     requestBody:
  *       required: true
  *       content:
@@ -92,6 +93,7 @@ router.post("/", Controller.shorten);
  *   patch:
  *     tags: [urls]
  *     summary: Repoint a short link
+ *     security: [{ JWT: [] }]
  *     parameters:
  *       - name: code
  *         in: path
@@ -124,6 +126,7 @@ router.post("/", Controller.shorten);
  *   delete:
  *     tags: [urls]
  *     summary: Delete a short link
+ *     security: [{ JWT: [] }]
  *     parameters:
  *       - name: code
  *         in: path

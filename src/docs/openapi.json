@@ -8,17 +8,12 @@
 			"identifier": "MIT"
 		}
 	},
-	"security": [
-		{
-			"JWT": []
-		}
-	],
+	"security": [],
 	"paths": {
 		"/urls/{code}": {
 			"get": {
 				"tags": ["urls"],
 				"summary": "Resolve a short code",
-				"security": [],
 				"parameters": [
 					{
 						"name": "code",
@@ -61,6 +56,11 @@
 			"patch": {
 				"tags": ["urls"],
 				"summary": "Repoint a short link",
+				"security": [
+					{
+						"JWT": []
+					}
+				],
 				"parameters": [
 					{
 						"name": "code",
@@ -124,6 +124,11 @@
 			"delete": {
 				"tags": ["urls"],
 				"summary": "Delete a short link",
+				"security": [
+					{
+						"JWT": []
+					}
+				],
 				"parameters": [
 					{
 						"name": "code",
@@ -159,6 +164,11 @@
 			"get": {
 				"tags": ["urls"],
 				"summary": "List owned short links",
+				"security": [
+					{
+						"JWT": []
+					}
+				],
 				"responses": {
 					"200": {
 						"description": "Listed",
@@ -193,6 +203,11 @@
 			"post": {
 				"tags": ["urls"],
 				"summary": "Shorten a url",
+				"security": [
+					{
+						"JWT": []
+					}
+				],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -244,7 +259,6 @@
 			"post": {
 				"tags": ["auth"],
 				"summary": "Authenticate",
-				"security": [],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -296,7 +310,6 @@
 			"post": {
 				"tags": ["auth"],
 				"summary": "Register",
-				"security": [],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -359,7 +372,19 @@
 				"content": {
 					"application/json": {
 						"schema": {
-							"$ref": "#/components/schemas/Result"
+							"allOf": [
+								{
+									"$ref": "#/components/schemas/Failure"
+								},
+								{
+									"type": "object",
+									"properties": {
+										"message": {
+											"example": "Malformed or expired token."
+										}
+									}
+								}
+							]
 						}
 					}
 				}
@@ -369,7 +394,19 @@
 				"content": {
 					"application/json": {
 						"schema": {
-							"$ref": "#/components/schemas/Result"
+							"allOf": [
+								{
+									"$ref": "#/components/schemas/Failure"
+								},
+								{
+									"type": "object",
+									"properties": {
+										"message": {
+											"example": "Short link is not found"
+										}
+									}
+								}
+							]
 						}
 					}
 				}
@@ -381,11 +418,14 @@
 						"schema": {
 							"allOf": [
 								{
-									"$ref": "#/components/schemas/Result"
+									"$ref": "#/components/schemas/Failure"
 								},
 								{
 									"type": "object",
 									"properties": {
+										"message": {
+											"example": "Missing fields"
+										},
 										"result": {
 											"$ref": "#/components/schemas/FieldErrors"
 										}
@@ -438,13 +478,28 @@
 				"required": ["success", "message", "result"],
 				"properties": {
 					"success": {
-						"type": "boolean"
+						"type": "boolean",
+						"const": true
 					},
 					"message": {
 						"type": "string"
 					},
 					"result": {}
 				}
+			},
+			"Failure": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/Result"
+					},
+					{
+						"properties": {
+							"success": {
+								"const": false
+							}
+						}
+					}
+				]
 			},
 			"FieldErrors": {
 				"type": "object",
