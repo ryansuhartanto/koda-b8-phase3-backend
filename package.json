@@ -13,6 +13,7 @@
 		"docs": "node src/docs/openapi.js",
 		"build": "vp pack",
 		"dev": "vp pack --watch --on-success 'node --enable-source-maps dist/index.mjs'",
+		"test": "vp test",
 		"fmt": "vp fmt",
 		"lint": "vp lint",
 		"prepare": "vp config"
