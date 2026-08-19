@@ -64,11 +64,9 @@ router.use(auth);
  *       required: true
  *       content:
  *         application/json:
- *           schema:
- *             type: object
- *             required: [url]
- *             properties:
- *               url: { type: string, format: uri, example: "https://example.com/a/very/long/link" }
+ *           schema: { $ref: "#/components/schemas/UrlInput" }
+ *         application/x-www-form-urlencoded:
+ *           schema: { $ref: "#/components/schemas/UrlInput" }
  *     responses:
  *       201:
  *         description: Shortened
@@ -103,11 +101,9 @@ router.post("/", Controller.shorten);
  *       required: true
  *       content:
  *         application/json:
- *           schema:
- *             type: object
- *             required: [url]
- *             properties:
- *               url: { type: string, format: uri, example: "https://example.com/a/very/long/link" }
+ *           schema: { $ref: "#/components/schemas/UrlInput" }
+ *         application/x-www-form-urlencoded:
+ *           schema: { $ref: "#/components/schemas/UrlInput" }
  *     responses:
  *       200:
  *         description: Updated
