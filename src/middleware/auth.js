@@ -36,7 +36,7 @@ const auth = (req, res, next) => {
 	if (decoded === null) {
 		return res.status(403).json({
 			success: false,
-			message: "Malformed or expired token.",
+			message: "Malformed or expired token",
 			result: null,
 		});
 	}
@@ -66,5 +66,5 @@ export default auth;
  *               - $ref: "#/components/schemas/Failure"
  *               - type: object
  *                 properties:
- *                   message: { example: Malformed or expired token. }
+ *                   message: { example: Malformed or expired token }
  */

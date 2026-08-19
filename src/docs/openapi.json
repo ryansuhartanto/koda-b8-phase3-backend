@@ -1,7 +1,7 @@
 {
 	"openapi": "3.1.0",
 	"info": {
-		"title": "ShortLink API",
+		"title": "ShortLink",
 		"version": "1.0.0",
 		"license": {
 			"name": "MIT",
@@ -380,7 +380,7 @@
 									"type": "object",
 									"properties": {
 										"message": {
-											"example": "Malformed or expired token."
+											"example": "Malformed or expired token"
 										}
 									}
 								}
