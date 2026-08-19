@@ -1,6 +1,23 @@
+import { QueryTypes } from "@sequelize/core";
+
 import sequelize from "#/models/index.js";
 import { UrlOwner } from "#/models/url-owner.js";
-import { Url } from "#/models/url.js";
+import { FINGERPRINT, Url } from "#/models/url.js";
+
+// DO UPDATE, not DO NOTHING: only an update returns the row that is already stored
+const [{ fingerprint }] = /** @type {[{ fingerprint: Buffer }]} */ (
+	await sequelize.query(
+		`INSERT INTO "UrlConfigs" (id, fingerprint, "createdAt", "updatedAt")
+		VALUES (1, $fingerprint, NOW(), NOW())
+		ON CONFLICT (id) DO UPDATE SET id = 1
+		RETURNING fingerprint`,
+		{ bind: { fingerprint: FINGERPRINT }, type: QueryTypes.SELECT },
+	)
+);
+
+if (!FINGERPRINT.equals(fingerprint)) {
+	throw new Error("LINK_KEY does not match the fingerprint in UrlConfigs");
+}
 
 /**
  * @param {string} code

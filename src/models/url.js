@@ -1,4 +1,4 @@
-import { hkdfSync } from "node:crypto";
+import { createHash, hkdfSync } from "node:crypto";
 
 import { DataTypes, Model } from "@sequelize/core";
 import siphash13 from "siphash/lib/siphash13.js";
@@ -67,6 +67,20 @@ function decipher(value) {
 
 	return (BigInt(left) << HALF_BITS) | BigInt(right);
 }
+
+/**
+ * @param {bigint} value
+ */
+function block(value) {
+	const buffer = Buffer.allocUnsafe(8);
+	buffer.writeBigUInt64BE(encipher(value));
+	return buffer;
+}
+
+// rekeying silently reassigns every issued code, so the key is pinned in the database
+export const FINGERPRINT = createHash("sha256")
+	.update(Buffer.concat([block(0n), block(1n), block(42n)]))
+	.digest();
 
 /**
  * @param {bigint} value
