@@ -10,7 +10,7 @@
 	"scripts": {
 		"db": "sqlumz",
 		"build": "vp pack",
-		"dev": "vp pack --watch --on-success 'node dist/index.mjs'",
+		"dev": "vp pack --watch --on-success 'node --enable-source-maps dist/index.mjs'",
 		"fmt": "vp fmt",
 		"lint": "vp lint",
 		"prepare": "vp config"
