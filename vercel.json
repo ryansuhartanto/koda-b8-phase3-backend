@@ -1,0 +1,5 @@
+{
+	"functions": {
+		"src/app.js": { "includeFiles": "src/docs/openapi.json" }
+	}
+}
