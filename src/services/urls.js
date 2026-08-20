@@ -5,7 +5,7 @@ import { digest } from "#/lib/uri.js";
 import sequelize from "#/models/index.js";
 import { Url } from "#/models/url.js";
 
-// DO UPDATE, not DO NOTHING: only an update returns the row that is already stored
+// DO UPDATE, not DO NOTHING: only an update returns the stored row
 const [{ fingerprint }] = /** @type {[{ fingerprint: Buffer }]} */ (
 	await sequelize.query(
 		`INSERT INTO "UrlConfigs" (id, fingerprint, "createdAt", "updatedAt")
@@ -52,7 +52,7 @@ function locate(code) {
  */
 export async function shorten(url, owner, custom) {
 	const urlHash = digest(url);
-	// custom paths are an owner feature, anonymous links only get their code
+	// custom paths are an owner feature
 	const alias = owner === undefined ? undefined : custom;
 
 	// false on a taken custom path
@@ -62,7 +62,7 @@ export async function shorten(url, owner, custom) {
 			defaults: { url, urlHash, owner, custom: alias },
 		});
 
-		// findCreateFind swallows the failed insert, so a taken custom path comes back as no row
+		// findCreateFind swallows the failed insert: a taken custom path returns no row
 		if (!record) {
 			return false;
 		}
@@ -87,8 +87,9 @@ export async function resolve(code) {
  * @param {string} [search]
  */
 export async function list(owner, limit, offset, search) {
-	// LIKE metacharacters are literal in a search box
+	// search input is literal, not a LIKE pattern
 	const term = `%${search?.replaceAll(/[\\%_]/g, String.raw`\$&`)}%`;
+	const id = search === undefined ? null : decode(search);
 
 	return Url.findAndCountAll({
 		where: {
@@ -97,6 +98,7 @@ export async function list(owner, limit, offset, search) {
 				[Op.or]: [
 					{ url: { [Op.iLike]: term } },
 					{ custom: { [Op.iLike]: term } },
+					...(id === null ? [] : [{ id }]),
 				],
 			}),
 		},
