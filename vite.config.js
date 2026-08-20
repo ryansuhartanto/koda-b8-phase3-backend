@@ -43,6 +43,7 @@ export default defineConfig(({ mode }) => {
 		pack: {
 			entry: "src/app.js",
 			sourcemap: true,
+			deps: { alwaysBundle: /./ },
 		},
 	};
 });
