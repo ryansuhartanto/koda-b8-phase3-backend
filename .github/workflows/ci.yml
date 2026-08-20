@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: oven-sh/setup-bun@v2
+
+      - run: bun install --frozen-lockfile
+
+      - run: bunx vp check
+        continue-on-error: true
+
+      - run: bun run test
+      - run: bun run build
+
+      - uses: actions/upload-artifact@v7
+        with:
+          path: dist/
