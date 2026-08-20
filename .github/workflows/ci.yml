@@ -18,6 +18,9 @@ jobs:
         continue-on-error: true
 
       - run: bun run test
+        env:
+          LINK_KEY: 0000000000000000000000000000000000000000000000000000000000000000
+
       - run: bun run build
 
       - uses: actions/upload-artifact@v7
