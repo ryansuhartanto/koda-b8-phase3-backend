@@ -143,10 +143,12 @@ export const resolve = async (req, res) => {
 export const list = async (req, res) => {
 	const limit = counted(req.query["limit"], PAGE_SIZE);
 	const page = counted(req.query["page"], 1);
+	const search = req.query["q"];
 	const { rows, count } = await Service.list(
 		/** @type {RequestAuth} */ (req.auth).sub,
 		limit,
 		(page - 1) * limit,
+		typeof search === "string" ? search : undefined,
 	);
 
 	return res.json({

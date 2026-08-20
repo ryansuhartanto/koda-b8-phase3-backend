@@ -1,4 +1,4 @@
-import { QueryTypes, UniqueConstraintError } from "@sequelize/core";
+import { Op, QueryTypes, UniqueConstraintError } from "@sequelize/core";
 
 import { decode, FINGERPRINT } from "#/lib/code.js";
 import { digest } from "#/lib/uri.js";
@@ -84,10 +84,22 @@ export async function resolve(code) {
  * @param {string} owner
  * @param {number} limit
  * @param {number} offset
+ * @param {string} [search]
  */
-export async function list(owner, limit, offset) {
+export async function list(owner, limit, offset, search) {
+	// LIKE metacharacters are literal in a search box
+	const term = `%${search?.replaceAll(/[\\%_]/g, String.raw`\$&`)}%`;
+
 	return Url.findAndCountAll({
-		where: { owner },
+		where: {
+			owner,
+			...(search && {
+				[Op.or]: [
+					{ url: { [Op.iLike]: term } },
+					{ custom: { [Op.iLike]: term } },
+				],
+			}),
+		},
 		order: [["id", "ASC"]],
 		limit,
 		offset,

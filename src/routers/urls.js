@@ -97,6 +97,11 @@ router.use(auth);
  *       - name: limit
  *         in: query
  *         schema: { type: integer, minimum: 1, default: 20 }
+ *       - name: q
+ *         in: query
+ *         description: Case-insensitive substring of the url or custom path
+ *         schema: { type: string }
+ *         example: example.com
  *     responses:
  *       200:
  *         description: Listed
