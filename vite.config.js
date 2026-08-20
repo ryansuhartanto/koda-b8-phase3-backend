@@ -42,7 +42,6 @@ export default defineConfig(({ mode }) => {
 
 		pack: {
 			entry: "src/index.js",
-			outDir: "api",
 			sourcemap: true,
 		},
 	};
