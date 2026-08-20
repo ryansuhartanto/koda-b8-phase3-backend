@@ -55,7 +55,6 @@ export async function shorten(url, owner, custom) {
 	// custom paths are an owner feature
 	const alias = owner === undefined ? undefined : custom;
 
-	// false on a taken custom path
 	return unique(async () => {
 		const [record] = await Url.findCreateFind({
 			where: { urlHash, owner: owner ?? null },
@@ -115,7 +114,6 @@ export async function list(owner, limit, offset, search) {
  * @param {string} [custom]
  */
 export async function update(code, owner, url, custom) {
-	// null | false | result
 	return unique(async () => {
 		const [, [record]] = await Url.update(
 			{

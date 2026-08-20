@@ -37,7 +37,7 @@ router.get("/*code", Controller.resolve);
 const optional = (req, res, next) =>
 	req.headers.authorization
 		? auth(
-				// auth types its request as AuthMiddlewareBody, which no mounted route carries
+				// auth types its request as AuthMiddlewareBody, no route carries it
 				/** @type {Parameters<typeof auth>[0]} */ (
 					/** @type {unknown} */ (req)
 				),
@@ -99,7 +99,7 @@ router.use(auth);
  *         schema: { type: integer, minimum: 1, default: 20 }
  *       - name: q
  *         in: query
- *         description: Case-insensitive substring of the url or custom path
+ *         description: Substring of the url or custom path, or a whole code
  *         schema: { type: string }
  *         example: example.com
  *     responses:

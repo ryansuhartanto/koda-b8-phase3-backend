@@ -74,7 +74,7 @@ function block(value) {
 	return buffer;
 }
 
-// rekeying silently reassigns every issued code, so the key is pinned in the database
+// rekeying reassigns every issued code, so the key is pinned in the db
 export const FINGERPRINT = createHash("sha256")
 	.update(Buffer.concat([block(0n), block(1n), block(42n)]))
 	.digest();
@@ -102,7 +102,7 @@ export function encode(id) {
  * @returns {string?}
  */
 export function decode(code) {
-	// Crockford: hyphens are decoration, O reads as 0, I and L read as 1
+	// Crockford: hyphens decorative, O is 0, I and L are 1
 	const normalized = code
 		.replaceAll("-", "")
 		.toUpperCase()

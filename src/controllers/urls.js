@@ -24,7 +24,7 @@ import * as Service from "#/services/urls.js";
  *         custom: { type: string, example: my/custom/link }
  *         reserved:
  *           type: array
- *           description: Paths the caller's own frontend already uses, refused as custom paths.
+ *           description: Paths the client's frontend already uses
  *           items: { type: string }
  *           example: [login, dashboard]
  *   responses:

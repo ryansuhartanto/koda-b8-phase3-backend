@@ -253,7 +253,7 @@
 					{
 						"name": "q",
 						"in": "query",
-						"description": "Case-insensitive substring of the url or custom path",
+						"description": "Substring of the url or custom path, or a whole code",
 						"schema": {
 							"type": "string"
 						},
@@ -543,7 +543,7 @@
 					},
 					"reserved": {
 						"type": "array",
-						"description": "Paths the caller's own frontend already uses, refused as custom paths.",
+						"description": "Paths the client's frontend already uses",
 						"items": {
 							"type": "string"
 						},
