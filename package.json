@@ -12,7 +12,7 @@
 		"db": "sqlumz",
 		"docs": "node src/docs/openapi.js",
 		"build": "vp pack",
-		"dev": "vp pack --watch --on-success 'node --enable-source-maps dist/index.mjs'",
+		"dev": "vp pack --watch --on-success 'node --enable-source-maps dist/app.mjs'",
 		"test": "vp test",
 		"fmt": "vp fmt",
 		"lint": "vp lint",

@@ -41,7 +41,7 @@ export default defineConfig(({ mode }) => {
 		},
 
 		pack: {
-			entry: "src/index.js",
+			entry: "src/app.js",
 			sourcemap: true,
 		},
 	};
