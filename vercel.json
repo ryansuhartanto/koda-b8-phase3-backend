@@ -1,5 +1,5 @@
 {
-	"functions": {
-		"src/app.js": { "includeFiles": "src/docs/openapi.json" }
-	}
+	"$schema": "https://openapi.vercel.sh/vercel.json",
+	"buildCommand": "bun run build",
+	"rewrites": [{ "source": "/(.*)", "destination": "/api" }]
 }
