@@ -108,7 +108,7 @@ export const register = async (req, res) => {
 	if (!auth) {
 		errors.email = "Email is already registered";
 
-		return res.status(constants.HTTP_STATUS_UNAUTHORIZED).json({
+		return res.status(constants.HTTP_STATUS_CONFLICT).json({
 			success: false,
 			message: errors.email,
 			result: errors,

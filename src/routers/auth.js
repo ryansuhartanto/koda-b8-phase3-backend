@@ -60,8 +60,17 @@ router.post("/login", Controller.login);
  *                 - type: object
  *                   properties:
  *                     result: { $ref: "#/components/schemas/Auth" }
- *       401:
- *         $ref: "#/components/responses/Invalid"
+ *       409:
+ *         description: Email is already registered
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: "#/components/schemas/Failure"
+ *                 - type: object
+ *                   properties:
+ *                     message: { example: Email is already registered }
+ *                     result: { $ref: "#/components/schemas/FieldErrors" }
  *       422:
  *         $ref: "#/components/responses/Invalid"
  */
