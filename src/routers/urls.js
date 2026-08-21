@@ -27,7 +27,7 @@ const router = Router();
  *                 - $ref: "#/components/schemas/Result"
  *                 - type: object
  *                   properties:
- *                     result: { $ref: "#/components/schemas/Url" }
+ *                     results: { $ref: "#/components/schemas/Url" }
  *       404:
  *         $ref: "#/components/responses/NotFound"
  */
@@ -71,7 +71,7 @@ const optional = (req, res, next) =>
  *                 - $ref: "#/components/schemas/Result"
  *                 - type: object
  *                   properties:
- *                     result: { $ref: "#/components/schemas/Url" }
+ *                     results: { $ref: "#/components/schemas/Url" }
  *       401:
  *         $ref: "#/components/responses/Unauthorized"
  *       409:
@@ -113,7 +113,7 @@ router.use(auth);
  *                 - type: object
  *                   properties:
  *                     total: { type: integer, example: 42 }
- *                     result:
+ *                     results:
  *                       type: array
  *                       items: { $ref: "#/components/schemas/Url" }
  *       401:
@@ -150,7 +150,7 @@ router.get("/", Controller.list);
  *                 - $ref: "#/components/schemas/Result"
  *                 - type: object
  *                   properties:
- *                     result: { $ref: "#/components/schemas/Url" }
+ *                     results: { $ref: "#/components/schemas/Url" }
  *       401:
  *         $ref: "#/components/responses/Unauthorized"
  *       404:

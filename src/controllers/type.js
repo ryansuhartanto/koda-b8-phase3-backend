@@ -7,11 +7,11 @@ export {};
  *   schemas:
  *     Result:
  *       type: object
- *       required: [success, message, result]
+ *       required: [success, message, results]
  *       properties:
  *         success: { type: boolean, const: true }
  *         message: { type: string }
- *         result: {}
+ *         results: {}
  *     Failure:
  *       allOf:
  *         - $ref: "#/components/schemas/Result"
@@ -27,7 +27,7 @@ export {};
  * @typedef Result
  * @property {S} success
  * @property {string} message
- * @property {R} result
+ * @property {R} results
  */
 
 /**
@@ -52,5 +52,5 @@ export {};
  *               - type: object
  *                 properties:
  *                   message: { example: Missing fields }
- *                   result: { $ref: "#/components/schemas/FieldErrors" }
+ *                   results: { $ref: "#/components/schemas/FieldErrors" }
  */

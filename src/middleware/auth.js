@@ -19,7 +19,7 @@ const auth = (req, res, next) => {
 		return res.status(401).json({
 			success: false,
 			message: "No authorization header provided",
-			result: null,
+			results: null,
 		});
 	}
 
@@ -28,7 +28,7 @@ const auth = (req, res, next) => {
 		return res.status(401).json({
 			success: false,
 			message: "Invalid bearer token",
-			result: null,
+			results: null,
 		});
 	}
 
@@ -37,7 +37,7 @@ const auth = (req, res, next) => {
 		return res.status(403).json({
 			success: false,
 			message: "Malformed or expired token",
-			result: null,
+			results: null,
 		});
 	}
 

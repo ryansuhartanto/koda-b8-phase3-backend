@@ -38,7 +38,7 @@
 										{
 											"type": "object",
 											"properties": {
-												"result": {
+												"results": {
 													"$ref": "#/components/schemas/Url"
 												}
 											}
@@ -100,7 +100,7 @@
 										{
 											"type": "object",
 											"properties": {
-												"result": {
+												"results": {
 													"$ref": "#/components/schemas/Url"
 												}
 											}
@@ -202,7 +202,7 @@
 										{
 											"type": "object",
 											"properties": {
-												"result": {
+												"results": {
 													"$ref": "#/components/schemas/Url"
 												}
 											}
@@ -277,7 +277,7 @@
 													"type": "integer",
 													"example": 42
 												},
-												"result": {
+												"results": {
 													"type": "array",
 													"items": {
 														"$ref": "#/components/schemas/Url"
@@ -328,7 +328,7 @@
 										{
 											"type": "object",
 											"properties": {
-												"result": {
+												"results": {
 													"$ref": "#/components/schemas/Auth"
 												}
 											}
@@ -379,7 +379,7 @@
 										{
 											"type": "object",
 											"properties": {
-												"result": {
+												"results": {
 													"$ref": "#/components/schemas/Auth"
 												}
 											}
@@ -404,7 +404,7 @@
 												"message": {
 													"example": "Email is already registered"
 												},
-												"result": {
+												"results": {
 													"$ref": "#/components/schemas/FieldErrors"
 												}
 											}
@@ -467,7 +467,7 @@
 										"message": {
 											"example": "This custom path is already taken"
 										},
-										"result": {
+										"results": {
 											"$ref": "#/components/schemas/FieldErrors"
 										}
 									}
@@ -514,7 +514,7 @@
 										"message": {
 											"example": "Missing fields"
 										},
-										"result": {
+										"results": {
 											"$ref": "#/components/schemas/FieldErrors"
 										}
 									}
@@ -575,7 +575,7 @@
 			},
 			"Result": {
 				"type": "object",
-				"required": ["success", "message", "result"],
+				"required": ["success", "message", "results"],
 				"properties": {
 					"success": {
 						"type": "boolean",
@@ -584,7 +584,7 @@
 					"message": {
 						"type": "string"
 					},
-					"result": {}
+					"results": {}
 				}
 			},
 			"Failure": {

@@ -38,7 +38,7 @@ Listens on `API_PORT` (default 3001).
 ## API
 
 Bearer JWT in `Authorization` where required. Bodies accept both `application/json` and
-`application/x-www-form-urlencoded`. Every response is `{ success, message, result }`;
+`application/x-www-form-urlencoded`. Every response is `{ success, message, results }`;
 failures carry `success: false` and may include per-field errors.
 
 | Method   | Path             | Auth     | Purpose                                                        |

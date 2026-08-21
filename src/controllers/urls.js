@@ -38,7 +38,7 @@ import * as Service from "#/services/urls.js";
  *               - type: object
  *                 properties:
  *                   message: { example: This custom path is already taken }
- *                   result: { $ref: "#/components/schemas/FieldErrors" }
+ *                   results: { $ref: "#/components/schemas/FieldErrors" }
  *     NotFound:
  *       description: Short link not found
  *       content:
@@ -128,14 +128,14 @@ export const resolve = async (req, res) => {
 		return res.status(constants.HTTP_STATUS_NOT_FOUND).json({
 			success: false,
 			message: "Short link is not found",
-			result: null,
+			results: null,
 		});
 	}
 
 	return res.json({
 		success: true,
 		message: "Resolved",
-		result: record,
+		results: record,
 	});
 };
 
@@ -155,7 +155,7 @@ export const list = async (req, res) => {
 		success: true,
 		message: "Listed",
 		total: count,
-		result: rows,
+		results: rows,
 	});
 };
 
@@ -168,7 +168,7 @@ export const shorten = async (req, res) => {
 		return res.status(constants.HTTP_STATUS_UNAUTHORIZED).json({
 			success: false,
 			message: "A custom path requires an account",
-			result: null,
+			results: null,
 		});
 	}
 
@@ -178,7 +178,7 @@ export const shorten = async (req, res) => {
 		return res.status(constants.HTTP_STATUS_UNPROCESSABLE_ENTITY).json({
 			success: false,
 			message: "Missing fields",
-			result: errors,
+			results: errors,
 		});
 	}
 
@@ -188,14 +188,14 @@ export const shorten = async (req, res) => {
 		return res.status(constants.HTTP_STATUS_CONFLICT).json({
 			success: false,
 			message: "This custom path is already taken",
-			result: { custom: "This custom path is already taken" },
+			results: { custom: "This custom path is already taken" },
 		});
 	}
 
 	return res.status(constants.HTTP_STATUS_CREATED).json({
 		success: true,
 		message: "Shortened",
-		result: record,
+		results: record,
 	});
 };
 
@@ -209,7 +209,7 @@ export const update = async (req, res) => {
 		return res.status(constants.HTTP_STATUS_UNPROCESSABLE_ENTITY).json({
 			success: false,
 			message: "Missing fields",
-			result: errors,
+			results: errors,
 		});
 	}
 
@@ -224,7 +224,7 @@ export const update = async (req, res) => {
 		return res.status(constants.HTTP_STATUS_CONFLICT).json({
 			success: false,
 			message: "This custom path is already taken",
-			result: { custom: "This custom path is already taken" },
+			results: { custom: "This custom path is already taken" },
 		});
 	}
 
@@ -232,14 +232,14 @@ export const update = async (req, res) => {
 		return res.status(constants.HTTP_STATUS_NOT_FOUND).json({
 			success: false,
 			message: "Short link is not found",
-			result: null,
+			results: null,
 		});
 	}
 
 	return res.json({
 		success: true,
 		message: "Updated",
-		result: record,
+		results: record,
 	});
 };
 
@@ -254,13 +254,13 @@ export const remove = async (req, res) => {
 		return res.status(constants.HTTP_STATUS_NOT_FOUND).json({
 			success: false,
 			message: "Short link is not found",
-			result: null,
+			results: null,
 		});
 	}
 
 	return res.json({
 		success: true,
 		message: "Removed",
-		result: null,
+		results: null,
 	});
 };

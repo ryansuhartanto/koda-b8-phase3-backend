@@ -73,7 +73,7 @@ export const login = async (req, res) => {
 		return res.status(constants.HTTP_STATUS_UNPROCESSABLE_ENTITY).json({
 			success: false,
 			message: "Missing fields",
-			result: errors,
+			results: errors,
 		});
 	}
 
@@ -83,7 +83,7 @@ export const login = async (req, res) => {
 		return res.status(constants.HTTP_STATUS_UNAUTHORIZED).json({
 			success: false,
 			message: "Invalid credentials",
-			result:
+			results:
 				auth === null
 					? { email: "Email is not registered" }
 					: { password: "Password is incorrect" },
@@ -93,7 +93,7 @@ export const login = async (req, res) => {
 	return res.json({
 		success: true,
 		message: "Authenticated",
-		result: auth,
+		results: auth,
 	});
 };
 
@@ -106,7 +106,7 @@ export const register = async (req, res) => {
 		return res.status(constants.HTTP_STATUS_UNPROCESSABLE_ENTITY).json({
 			success: false,
 			message: "Missing fields",
-			result: errors,
+			results: errors,
 		});
 	}
 
@@ -116,13 +116,13 @@ export const register = async (req, res) => {
 		return res.status(constants.HTTP_STATUS_CONFLICT).json({
 			success: false,
 			message: "Email is already registered",
-			result: { email: "Email is already registered" },
+			results: { email: "Email is already registered" },
 		});
 	}
 
 	return res.json({
 		success: true,
 		message: "Registered",
-		result: auth,
+		results: auth,
 	});
 };

@@ -28,7 +28,7 @@ const router = Router();
  *                 - $ref: "#/components/schemas/Result"
  *                 - type: object
  *                   properties:
- *                     result: { $ref: "#/components/schemas/Auth" }
+ *                     results: { $ref: "#/components/schemas/Auth" }
  *       401:
  *         $ref: "#/components/responses/Invalid"
  *       422:
@@ -59,7 +59,7 @@ router.post("/login", Controller.login);
  *                 - $ref: "#/components/schemas/Result"
  *                 - type: object
  *                   properties:
- *                     result: { $ref: "#/components/schemas/Auth" }
+ *                     results: { $ref: "#/components/schemas/Auth" }
  *       409:
  *         description: Email is already registered
  *         content:
@@ -70,7 +70,7 @@ router.post("/login", Controller.login);
  *                 - type: object
  *                   properties:
  *                     message: { example: Email is already registered }
- *                     result: { $ref: "#/components/schemas/FieldErrors" }
+ *                     results: { $ref: "#/components/schemas/FieldErrors" }
  *       422:
  *         $ref: "#/components/responses/Invalid"
  */
