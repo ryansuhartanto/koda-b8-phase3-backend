@@ -13,7 +13,7 @@ import * as Service from "#/services/auth.js";
  *       required: [email, password]
  *       properties:
  *         email: { type: string, format: email, example: user@example.com }
- *         password: { type: string, example: correct-horse-battery-staple }
+ *         password: { type: string, minLength: 6, example: correct-horse-battery-staple }
  *     Auth:
  *       type: object
  *       properties:
@@ -38,20 +38,38 @@ import * as Service from "#/services/auth.js";
  * @property {string} [password]
  */
 
-/** @type {import("express").RequestHandler<{}, import("./type").Result<AuthResult, any>, AuthQuery>} */
-export const login = async (req, res) => {
-	const { email, password } = req.body ?? {};
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PASSWORD_LENGTH = 6;
+
+/**
+ * @param {Partial<AuthQuery>} body
+ * @returns {AuthResult?}
+ */
+function credentials({ email, password }) {
 	/** @type {AuthResult} */
 	const errors = {};
 
 	if (!email) {
 		errors.email = "Missing email field";
-	}
-	if (!password) {
-		errors.password = "Missing password field";
+	} else if (!EMAIL.test(email)) {
+		errors.email = "Invalid email";
 	}
 
-	if (Object.keys(errors).length > 0) {
+	if (!password) {
+		errors.password = "Missing password field";
+	} else if (password.length < PASSWORD_LENGTH) {
+		errors.password = `Password must be at least ${PASSWORD_LENGTH} characters`;
+	}
+
+	return Object.keys(errors).length > 0 ? errors : null;
+}
+
+/** @type {import("express").RequestHandler<{}, import("./type").Result<AuthResult, any>, AuthQuery>} */
+export const login = async (req, res) => {
+	const { email, password } = req.body ?? {};
+	const errors = credentials(req.body ?? {});
+
+	if (errors) {
 		return res.status(constants.HTTP_STATUS_UNPROCESSABLE_ENTITY).json({
 			success: false,
 			message: "Missing fields",
@@ -62,16 +80,13 @@ export const login = async (req, res) => {
 	const auth = await Service.login(email, password);
 
 	if (!auth) {
-		if (auth === null) {
-			errors.email = "Email is not registered";
-		} else {
-			errors.password = "Password is incorrect";
-		}
-
 		return res.status(constants.HTTP_STATUS_UNAUTHORIZED).json({
 			success: false,
 			message: "Invalid credentials",
-			result: errors,
+			result:
+				auth === null
+					? { email: "Email is not registered" }
+					: { password: "Password is incorrect" },
 		});
 	}
 
@@ -85,17 +100,9 @@ export const login = async (req, res) => {
 /** @type {import("express").RequestHandler<{}, import("./type").Result<AuthResult, any>, AuthQuery>} */
 export const register = async (req, res) => {
 	const { email, password } = req.body ?? {};
-	/** @type {AuthResult} */
-	const errors = {};
+	const errors = credentials(req.body ?? {});
 
-	if (!email) {
-		errors.email = "Missing email field";
-	}
-	if (!password) {
-		errors.password = "Missing password field";
-	}
-
-	if (Object.keys(errors).length > 0) {
+	if (errors) {
 		return res.status(constants.HTTP_STATUS_UNPROCESSABLE_ENTITY).json({
 			success: false,
 			message: "Missing fields",
@@ -106,12 +113,10 @@ export const register = async (req, res) => {
 	const auth = await Service.register(email, password);
 
 	if (!auth) {
-		errors.email = "Email is already registered";
-
 		return res.status(constants.HTTP_STATUS_CONFLICT).json({
 			success: false,
-			message: errors.email,
-			result: errors,
+			message: "Email is already registered",
+			result: { email: "Email is already registered" },
 		});
 	}
 
