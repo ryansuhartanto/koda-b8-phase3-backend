@@ -59,6 +59,52 @@ The full OpenAPI document lives at `src/docs/openapi.json` and is served as a
 
 `.http` holds a few ready-made requests for REST-client extensions.
 
+## Assumptions
+
+### Anonymous shortening
+
+`POST /urls` works without a token. Anonymous links are stored with `owner NULL`: they
+never appear in `GET /urls` and cannot be edited or deleted, since every management route
+filters by `owner`. There is no claim flow. Custom paths require an account (401).
+
+### Codes are addresses, not rows
+
+There is no `code` column. The row id is enciphered by a 50-bit Feistel network (8 rounds,
+SipHash-1-3 round function, round keys from `LINK_KEY` via HKDF) and rendered as 10
+Crockford's Base32 characters. Bijective, so a code decodes back to an id: no lookup
+table, no collision retry, no enumerable sequential ids. Rekeying would repoint every
+issued code, so `src/services/urls.js` pins a fingerprint of the key in `UrlConfigs` on
+boot and refuses to start if it changes.
+
+### Dedup by `urlHash`, per owner
+
+Shortening the same url twice returns the existing row. Sameness is `sha256` of the url
+after RFC 3986 6.2.2 syntax-based normalization (`src/lib/uri.js`). Being syntactic,
+`?a=1&b=2` and `?b=2&a=1` differ. The bucket is `(urlHash, owner)`, anonymous included, so
+two accounts shortening one link get separate codes.
+
+### Delete by code
+
+`DELETE /urls/{code}` takes the public code. `locate()` decodes it: a valid generated code
+resolves to an id, anything else matches a custom path. The `WHERE` always carries
+`owner`, and missing and not-yours both answer 404.
+
+### Slug constraints
+
+| Constraint          | Discharged by                                                                                      |
+| ------------------- | -------------------------------------------------------------------------------------------------- |
+| QR-friendly charset | `ALLOWED` in `src/lib/custom.js`                                                                   |
+| Crockford leniency  | `decode()` folds hyphens, case, `O`→`0`, `I`/`L`→`1`                                               |
+| Reserved paths      | the `reserved` array on `POST`/`PATCH /urls`, matched case-insensitively against the first segment |
+| Not code-shaped     | `reject()` runs `decode()` and refuses anything that parses as a generated code                    |
+
+The charset is QR alphanumeric mode minus space, plus `a-z`, so a lowercase custom path
+pushes its QR into byte mode.
+
+Reserved paths are per request, not hardcoded: the API does not know which routes the
+frontend in front of it owns. The shipped frontend sends no list, so nothing is reserved
+today.
+
 ## License
 
 [MIT](LICENSE)
