@@ -22,7 +22,9 @@ const api = express.Router();
 api.use("/", docs);
 
 api.use("/auth", auth);
+api.use("/", auth);
 api.use("/urls", urls);
+api.use("/links", urls);
 
 app.use(baseUrl, api);
 

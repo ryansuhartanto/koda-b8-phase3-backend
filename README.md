@@ -51,6 +51,9 @@ failures carry `success: false` and may include per-field errors.
 | `PATCH`  | `/urls/{code}`   | required | Repoint the link at a new url                                  |
 | `DELETE` | `/urls/{code}`   | required | Delete the link                                                |
 
+`/auth` is also mounted at the root and `/urls` at `/links`, so `POST /login` and
+`GET /links/{code}` are the same handlers.
+
 `POST /urls` takes `url`, an optional `custom` code, and an optional `reserved` array of
 paths the calling frontend already uses so generated codes never collide with its routes.
 
